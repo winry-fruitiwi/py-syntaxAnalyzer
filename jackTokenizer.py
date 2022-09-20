@@ -1,6 +1,16 @@
 class JackTokenizer:
     def __init__(self):
-        self.input_file = open("test.jack")
+        self.input_file = open("test.jack").readlines()
+
+        self.stripped_lines = []
+
+        for line in self.input_file:
+            if line == "\n" or line[0:2] == "//":
+                continue
+
+            stripped_line = line.strip("\n").strip("\n")
+
+            self.stripped_lines.append(stripped_line)
 
     # detects if the tokenizer has more tokens
     def has_more_tokens(self):
