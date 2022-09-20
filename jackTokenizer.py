@@ -1,6 +1,6 @@
 class JackTokenizer:
     def __init__(self):
-        pass
+        self.input_file = open("test.jack")
 
     # detects if the tokenizer has more tokens
     def has_more_tokens(self):
@@ -22,7 +22,7 @@ class JackTokenizer:
     def symbol(self):
         pass
 
-    # returns current token if it's a identifier
+    # returns current token if it's an identifier
     def identifier(self):
         pass
 
