@@ -3,6 +3,29 @@ class JackTokenizer:
         # open the input file.
         self.input_file = open("test.jack").readlines()
 
+        # a list of all the symbols in the jack language.
+        self.symbols = [
+            '{',
+            '}',
+            '(',
+            ')',
+            '[',
+            ']',
+            '.',
+            ',',
+            ';',
+            '+',
+            '-',
+            '*',
+            '/',
+            '&',
+            '|',
+            '<',
+            '>',
+            '=',
+            '~'
+         ]
+
         # a list of the file's lines that will be stripped of whitespace, new
         # lines, full line comments, and inline comments.
         self.stripped_lines = []
@@ -46,6 +69,13 @@ class JackTokenizer:
 
             self.stripped_lines.append(stripped_line)
 
+        # the two indices below handle where I am in my list of stripped lines.
+        self.current_line_index = 0
+        self.current_char_index = 0
+
+        # the current character
+        self.current_char = self.stripped_lines[0][0]
+
     # detects if the tokenizer has more tokens
     def has_more_tokens(self):
         pass
@@ -77,3 +107,7 @@ class JackTokenizer:
     # returns current token if it's a string constant. Does not handle quotes.
     def string_val(self):
         pass
+
+    # returns if current character is a symbol.
+    def is_symbol(self):
+        return self.current_char in self.symbols
