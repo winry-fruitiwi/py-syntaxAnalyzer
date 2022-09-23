@@ -82,6 +82,17 @@ class JackTokenizer:
 
     # advances the current token to the next token
     def advance(self):
+        """
+        Current pseudocode:
+
+        if current_char_index < stripped_lines[current_line_index].length:
+            self.current_char_index++
+        else if current_char_index == stripped_lines[current_line_index].length - 1
+        and current_line_index < stripped_lines[current_line_index].length:
+            self.current_line_index++
+            self.current_char_index = 0
+        :return:
+        """
         pass
 
     # checks the type of the current token
