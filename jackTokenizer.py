@@ -49,7 +49,7 @@ class JackTokenizer:
                 # ValueError if the substring doesn't exist. in this block,
                 # I'm checking if there is a //, which signals the beginning
                 # of a comment no matter where it is.
-                if stripped_line.index("//", 0):
+                if stripped_line.index("//"):
                     # if there is an index, then take a slice from 0 to the
                     # index.
                     stripped_line = stripped_line[0:stripped_line.index("//")]
@@ -64,6 +64,9 @@ class JackTokenizer:
                 # have to append the line to self.stripped_lines anymore.
                 if stripped_line == "":
                     continue
+
+            # if there is no //,
+
             except ValueError:
                 pass
 
@@ -78,19 +81,25 @@ class JackTokenizer:
 
     # detects if the tokenizer has more tokens
     def has_more_tokens(self):
-        pass
+        """
+        return if there are more characters and lines
+        :return:
+        """
 
     # advances the current token to the next token
     def advance(self):
         """
         Current pseudocode:
 
-        if current_char_index < stripped_lines[current_line_index].length:
+        if there are characters left in the line:
             self.current_char_index++
-        else if current_char_index == stripped_lines[current_line_index].length - 1
-        and current_line_index < stripped_lines[current_line_index].length:
+        else if there are no more characters left in the line
+        and there are still more lines:
             self.current_line_index++
             self.current_char_index = 0
+        else (there are no more characters or lines left
+        or for some reason the character index is greater than the line's length):
+            do nothing!
         :return:
         """
         pass
