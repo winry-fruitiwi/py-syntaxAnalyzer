@@ -65,8 +65,8 @@ class JackTokenizer:
                 if stripped_line == "":
                     continue
 
-            # if there is no //,
-
+            # if there is no //, then a ValueError will be raised and the
+            # except block will fire.
             except ValueError:
                 pass
 
@@ -81,48 +81,29 @@ class JackTokenizer:
 
     # detects if the tokenizer has more tokens
     def has_more_tokens(self):
-        """
-        return if there are more characters and lines
-        :return:
-        """
-
-        # return the opposite of if the current character index is the same as
+        # return if the current character index is the same as
         # the maximum character index for this line. then do the same for the
-        # line index
+        # line index. after finding the result, reverse it.
         return not (self.current_char_index == len(
             self.stripped_lines[self.current_line_index])-1
                     and self.current_line_index == len(self.stripped_lines) - 1)
 
     # advances the current token to the next token
     def advance(self):
-        """
-        Current pseudocode:
-
-        if there are characters left in the line:
-            self.current_char_index++
-        else if there are no more characters left in the line
-        and there are still more lines:
-            self.current_line_index++
-            self.current_char_index = 0
-        else (there are no more characters or lines left
-        or for some reason the character index is greater than the line's length):
-            do nothing!
-        :return:
-        """
+        # the current line's length
+        current_line_length = len(self.stripped_lines[self.current_line_index]) - 1
 
         # if the current character is None, initialize it.
         if self.current_char is None:
             self.current_char = self.stripped_lines[0][0]
 
         # if there are characters left in the line, I increment current_char_index
-        elif self.current_char_index < len(
-                self.stripped_lines[self.current_line_index]) - 1:
+        elif self.current_char_index < current_line_length:
             self.current_char_index += 1
 
         # elif there are no more characters left in the line and there are still
         # more lines, increment current_line_index and reset current_char_index
-        elif (self.current_char_index == len(
-                self.stripped_lines[self.current_line_index]) - 1
+        elif (self.current_char_index == current_line_length
               and self.current_line_index < len(self.stripped_lines) - 1):
             self.current_line_index += 1
             self.current_char_index = 0

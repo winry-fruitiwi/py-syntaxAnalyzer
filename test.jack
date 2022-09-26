@@ -1,7 +1,4 @@
-        // start of dialogue box
-hello
+let x;
+let y;
 
-// dialogue box
-
-see // end of dialogue box
-
+// jack comment
