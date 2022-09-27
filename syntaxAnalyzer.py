@@ -8,3 +8,6 @@ jack_tokenizer = JackTokenizer()
 while jack_tokenizer.has_more_tokens():
     jack_tokenizer.advance()
     print(jack_tokenizer.current_char)
+    print(jack_tokenizer.is_symbol())
+    print(jack_tokenizer.is_delimiter())
+    print("\n")
