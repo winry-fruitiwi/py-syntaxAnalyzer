@@ -24,7 +24,7 @@ class JackTokenizer:
             '>',
             '=',
             '~'
-         ]
+        ]
 
         # a list of the file's lines that will be stripped of whitespace, new
         # lines, full line comments, and inline comments.
@@ -77,7 +77,7 @@ class JackTokenizer:
         self.current_char_index = 0
 
         # the current character
-        self.current_char = self.stripped_lines[0][0]
+        self.current_char = None
 
     # detects if the tokenizer has more tokens
     def has_more_tokens(self):
@@ -85,6 +85,13 @@ class JackTokenizer:
         return if there are more characters and lines
         :return:
         """
+
+        # return the opposite of if the current character index is the same as
+        # the maximum character index for this line. then do the same for the
+        # line index
+        return not (self.current_char_index == len(
+            self.stripped_lines[self.current_line_index])-1
+                    and self.current_line_index == len(self.stripped_lines) - 1)
 
     # advances the current token to the next token
     def advance(self):
@@ -102,7 +109,27 @@ class JackTokenizer:
             do nothing!
         :return:
         """
-        pass
+
+        # if the current character is None, initialize it.
+        if self.current_char is None:
+            self.current_char = self.stripped_lines[0][0]
+
+        # if there are characters left in the line, I increment current_char_index
+        elif self.current_char_index < len(
+                self.stripped_lines[self.current_line_index]) - 1:
+            self.current_char_index += 1
+
+        # elif there are no more characters left in the line and there are still
+        # more lines, increment current_line_index and reset current_char_index
+        elif (self.current_char_index == len(
+                self.stripped_lines[self.current_line_index]) - 1
+              and self.current_line_index < len(self.stripped_lines) - 1):
+            self.current_line_index += 1
+            self.current_char_index = 0
+
+        # update the current character
+        self.current_char = self.stripped_lines[self.current_line_index][
+            self.current_char_index]
 
     # checks the type of the current token
     def token_type(self):
