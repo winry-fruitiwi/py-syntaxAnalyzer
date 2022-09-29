@@ -112,6 +112,16 @@ class JackTokenizer:
         self.current_char = self.stripped_lines[self.current_line_index][
             self.current_char_index]
 
+        # a list of all the delimiters I have encountered
+        delimiter_list = []
+
+        # appends to delimiter_list when this function finds a delimiter
+        for char in self.stripped_lines[self.current_line_index]:
+            if self.is_delimiter(char):
+                delimiter_list.append(char)
+
+        print(delimiter_list)
+
     # checks the type of the current token
     def token_type(self):
         pass
@@ -143,6 +153,6 @@ class JackTokenizer:
     # returns if current character is a symbol, whitespace, or newline.
     def is_delimiter(self, char):
         return (self.is_symbol(char) or
-                self.current_char == "\n" or
-                self.current_char == " "
+                char == "\n" or
+                char == " "
                 )
