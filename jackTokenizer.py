@@ -115,10 +115,11 @@ class JackTokenizer:
         # a list of all the delimiters I have encountered
         delimiter_list = []
 
-        # appends to delimiter_list when this function finds a delimiter
-        for char in self.stripped_lines[self.current_line_index]:
+        # appends the index of every delimiter found to delimiter_list
+        for char_index in range(len(self.stripped_lines[self.current_line_index])):
+            char = self.stripped_lines[self.current_line_index][char_index]
             if self.is_delimiter(char):
-                delimiter_list.append(char)
+                delimiter_list.append(char_index)
 
         print(delimiter_list)
 
