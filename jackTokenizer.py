@@ -137,12 +137,12 @@ class JackTokenizer:
         pass
 
     # returns if current character is a symbol.
-    def is_symbol(self):
-        return self.current_char in self.symbols
+    def is_symbol(self, char):
+        return char in self.symbols
 
     # returns if current character is a symbol, whitespace, or newline.
-    def is_delimiter(self):
-        return (self.is_symbol() or
+    def is_delimiter(self, char):
+        return (self.is_symbol(char) or
                 self.current_char == "\n" or
                 self.current_char == " "
                 )
