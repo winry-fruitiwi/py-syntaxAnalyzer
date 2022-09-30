@@ -91,7 +91,8 @@ class JackTokenizer:
     # advances the current token to the next token
     def advance(self):
         # the current line's length
-        current_line_length = len(self.stripped_lines[self.current_line_index]) - 1
+        curr_line = self.stripped_lines[self.current_line_index]
+        current_line_length = len(curr_line) - 1
 
         # if the current character is None, initialize it.
         if self.current_char is None:
@@ -113,7 +114,7 @@ class JackTokenizer:
             self.current_char_index]
 
         # a list of all the delimiters I have encountered
-        delimiter_list = []
+        delimiter_list = [0]
 
         # appends the index of every delimiter found to delimiter_list
         for char_index in range(len(self.stripped_lines[self.current_line_index])):
@@ -121,7 +122,15 @@ class JackTokenizer:
             if self.is_delimiter(char):
                 delimiter_list.append(char_index)
 
-        print(delimiter_list)
+        # a list of all the slices I can make out of my delimiter list
+        slice_list = []
+
+        # print a list of slices of the current line's tokens
+        for index in range(len(delimiter_list) - 1):
+            next_index = index+1
+            slice_list.append(curr_line[delimiter_list[index]:delimiter_list[next_index]])
+
+        print(slice_list)
 
     # checks the type of the current token
     def token_type(self):
