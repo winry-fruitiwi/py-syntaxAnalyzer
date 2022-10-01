@@ -121,6 +121,8 @@ class JackTokenizer:
             char = self.stripped_lines[self.current_line_index][char_index]
             if self.is_delimiter(char):
                 delimiter_list.append(char_index)
+                if self.is_symbol(char):
+                    delimiter_list.append(char_index+1)
 
         # a list of all the slices I can make out of my delimiter list
         slice_list = []
