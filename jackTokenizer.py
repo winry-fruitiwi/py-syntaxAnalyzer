@@ -130,7 +130,11 @@ class JackTokenizer:
         # print a list of slices of the current line's tokens
         for index in range(len(delimiter_list) - 1):
             next_index = index+1
-            slice_list.append(curr_line[delimiter_list[index]:delimiter_list[next_index]])
+
+            curr_slice = curr_line[delimiter_list[index]:delimiter_list[next_index]]
+            stripped_slice = curr_slice.strip(" ").strip("\n").strip(" ")
+
+            slice_list.append(stripped_slice)
 
         print(slice_list)
 
