@@ -134,7 +134,8 @@ class JackTokenizer:
             curr_slice = curr_line[delimiter_list[index]:delimiter_list[next_index]]
             stripped_slice = curr_slice.strip(" ").strip("\n").strip(" ")
 
-            slice_list.append(stripped_slice)
+            if stripped_slice != "":
+                slice_list.append(stripped_slice)
 
         print(slice_list)
 
