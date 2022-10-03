@@ -26,6 +26,47 @@ class JackTokenizer:
             '~'
         ]
 
+        # a list of all the keywords in the jack language.
+        self.keywords = [
+            'class',
+            'constructor',
+            'function',
+            'class',
+            'method',
+            'field',
+            'static',
+            'method',
+            'var',
+            'int',
+            'char',
+            'boolean',
+            'void',
+            'true',
+            'false',
+            'null',
+            'this',
+            'let',
+            'do',
+            'if',
+            'else',
+            'while',
+            'return'
+        ]
+
+        # a list from 0-9.
+        self.digits = [
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9'
+        ]
+
         # a list of the file's lines that will be stripped of whitespace, new
         # lines, full line comments, and inline comments.
         self.stripped_lines = []
