@@ -11,3 +11,6 @@ while jack_tokenizer.has_more_tokens():
     print(jack_tokenizer.is_symbol(jack_tokenizer.current_char))
     print(jack_tokenizer.is_delimiter(jack_tokenizer.current_char))
     print("\n")
+
+    # this provides a stop for the infinite loop
+    input("press enter:")
