@@ -1,6 +1,7 @@
 class JackTokenizer:
     def __init__(self):
         # open the input file.
+        self.current_token = None
         self.input_file = open("test.jack").readlines()
 
         # a list of all the symbols in the jack language.
@@ -66,6 +67,9 @@ class JackTokenizer:
             '8',
             '9'
         ]
+
+        # the previous delimiter index I encountered
+        self.previous_char_index = 0
 
         # a list of the file's lines that will be stripped of whitespace, new
         # lines, full line comments, and inline comments.
@@ -134,28 +138,10 @@ class JackTokenizer:
         # the current line
         curr_line = self.stripped_lines[self.current_line_index]
 
-        # # if the current character is None, initialize it.
-        # if self.current_char is None:
-        #     self.current_char = self.stripped_lines[0][0]
-        #
-        # # if there are characters left in the line, I increment current_char_index
-        # elif self.current_char_index < current_line_length:
-        #     self.current_char_index += 1
-        #
-        # # elif there are no more characters left in the line and there are still
-        # # more lines, increment current_line_index and reset current_char_index
-        # elif (self.current_char_index == current_line_length
-        #       and self.current_line_index < len(self.stripped_lines) - 1):
-        #     self.current_line_index += 1
-        #     self.current_char_index = 0
-        #
-        # # update the current character
-        # self.current_char = self.stripped_lines[self.current_line_index][
-        #     self.current_char_index]
-
         # if the current character is None, make it the first character in
         # stripped_lines
         if self.current_char is None:
+            self.current_token = ""
             self.current_char_index = 0
             self.current_line_index = 0
             self.current_char = self.stripped_lines[0][0]
@@ -166,6 +152,7 @@ class JackTokenizer:
                 and self.current_line_index < len(self.stripped_lines) - 1):
             self.current_line_index += 1
             self.current_char_index = 0
+            self.current_char = self.stripped_lines[self.current_line_index][self.current_char_index]
             return
 
         # for each character in the current line, starting from the current
@@ -175,6 +162,8 @@ class JackTokenizer:
             char = curr_line[char_index]
 
             if self.is_delimiter(char) or char_index == len(curr_line)-1:
+                self.current_token = curr_line[self.current_char_index:char_index]
+
                 self.current_char_index = char_index
                 break
 
@@ -205,6 +194,9 @@ class JackTokenizer:
         print(slice_list)
 
         self.current_char = curr_line[self.current_char_index]
+
+        # print the previous character index
+        print(self.previous_char_index)
 
     # checks the type of the current token
     def token_type(self):
