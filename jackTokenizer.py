@@ -120,6 +120,13 @@ class JackTokenizer:
             self.current_char = self.stripped_lines[0][0]
             return
 
+        # if I'm done finding all the delimiters, advance to the next line
+        if (self.current_char_index == len(curr_line) - 1
+                and self.current_line_index < len(self.stripped_lines) - 1):
+            self.current_line_index += 1
+            self.current_char_index = 0
+            return
+
         # for each character in the current line, starting from the current
         # character index, check if the character at curr_line[char_index]
         # is a delimiter. if it is, make current_char_index the char_index.
