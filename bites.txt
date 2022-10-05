@@ -1,0 +1,76 @@
+JackTokenizer
+	☒ Constructor (I mean, __init__)
+		Variables:
+			☒ jack input file
+			☒ array of stripped lines
+			☒ index of which line in the stripped lines I'm in
+			☒ index of characters in the current stripped line
+			☒ current character
+			☒ list of all symbols in Jack language, transcribe from image
+			☒ list of all keywords in the Jack language
+			☒ list of all numbers to check for ints
+			☒ current token
+
+		☒ open jack input file, file.readLines(), print array
+		remove comments
+			☒ remove full-line comments
+				check for // and remove line if it starts with two slashes
+			☒ adapt full-line comment removal to also remove inline comments
+				check for // and remove line up to the two slashes, if they exist
+			TODO: use index() and try-except blocks for both of these.
+				or use find() and use if statements.
+			☒ strip newlines and white space
+				iterate through lines of input file as they will be an array of lines
+
+	☒ advance
+		"Gets the next token from input and makes it the current token"
+		General plan:
+			find what the letters up to the next space/symbol/end of line are
+			if they're all numbers, make them the current token
+			if they are all alphanumeric letters:
+				if they are a keyword, make that the current token
+				otherwise, it must be an identifier
+			if the string starts with a double quote:
+				search for next double quote
+				make everything, including quotes, the current token.
+			if the second index is the last index, advance to next line
+			if the first index is a symbol:
+				make it the current token
+
+	☒ hasMoreTokens
+		☒ am I on the last line and is the next space/symbol/end_of_line the last index?
+			return !this_result
+
+	☐ tokenType
+		"Returns KEYWORD, SYMBOL, IDENTIFIER, INT_CONST, STRING_CONST as token type."
+		General plan:
+			☐ if the first letter is in digits, return INT_CONST
+			☐ elif the first letter is a double quote, return STRING_CONST
+			☐ elif the current token is in self.symbols, return SYMBOL
+			☐ elif the current token is in self.keywords, return KEYWORD
+			☐ otherwise, the current token must be an IDENTIFIER
+
+	☐ stringVal
+		☐ return current token with quotes
+		☐ return current token without quotes (strip('"'))
+
+	☐ keyWord
+		☐ return current token
+
+	☐ symbol
+		☐ return current token
+
+	☐ identifier
+		☐ return current token
+
+	☐ intVal
+		☐ return current token
+
+
+	Helper Functions:
+
+	☒ isSymbol
+		☒ return if character is a symbol
+
+	☒ isDelimiter
+		☒ return if isSymbol() OR character is whitespace OR character is \n
