@@ -115,7 +115,7 @@ class JackTokenizer:
             except ValueError:
                 pass
 
-            self.stripped_lines.append(stripped_line)
+            self.stripped_lines.append(stripped_line + " ")
 
         # the two indices below handle where I am in my list of stripped lines.
         self.current_line_index = 0
@@ -154,6 +154,7 @@ class JackTokenizer:
             self.current_char_index = 0
             self.current_char = self.stripped_lines[self.current_line_index][
                 self.current_char_index]
+            self.current_token = ""
             return
 
         # for each character in the current line, starting from the current
@@ -210,7 +211,10 @@ class JackTokenizer:
 
     # checks the type of the current token
     def token_type(self):
-        pass
+        if self.current_token == "":
+            return
+        if self.current_token[0] in self.digits:
+            print("INT_CONST")
 
     # returns current token if it's a keyword
     def key_word(self):

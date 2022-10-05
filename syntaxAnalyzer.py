@@ -12,4 +12,5 @@ while jack_tokenizer.has_more_tokens():
     print(jack_tokenizer.current_char_index)
     print(jack_tokenizer.is_symbol(jack_tokenizer.current_char))
     print(jack_tokenizer.is_delimiter(jack_tokenizer.current_char))
+    jack_tokenizer.token_type()
     print("\n")
