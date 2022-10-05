@@ -163,6 +163,11 @@ class JackTokenizer:
         for char_index in range(self.current_char_index + 1, len(curr_line)):
             char = curr_line[char_index]
 
+            if char == '"':
+                print(char_index)
+                print(self.current_char_index)
+                self.current_token = curr_line[char_index:curr_line.index('"', char_index)]
+
             if self.is_delimiter(char) or char_index == len(curr_line) - 1:
                 # make the current token a substring of the current line from
                 # the current character index to char_index
@@ -211,10 +216,24 @@ class JackTokenizer:
 
     # checks the type of the current token
     def token_type(self):
+        # if we haven't initialized the current token or it's the start of the
+        # line, do nothing.
         if self.current_token == "":
             return
+
+        # if the first character in the current token is a digit, then we know
+        # it must be an integer constant because nothing else can start with a
+        # digit.
         if self.current_token[0] in self.digits:
             print("INT_CONST")
+
+        # if the current token is a keyword, then print KEYWORD.
+        if self.current_token in self.keywords:
+            print("KEYWORD")
+
+        # do the same for symbols.
+        if self.current_token in self.symbols:
+            print("SYMBOL")
 
     # returns current token if it's a keyword
     def key_word(self):
