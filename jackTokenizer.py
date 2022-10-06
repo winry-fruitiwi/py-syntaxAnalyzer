@@ -163,15 +163,19 @@ class JackTokenizer:
         for char_index in range(self.current_char_index + 1, len(curr_line)):
             char = curr_line[char_index]
 
-            if char == '"':
-                print(char_index)
-                print(self.current_char_index)
-                self.current_token = curr_line[char_index:curr_line.index('"', char_index)]
+            if char == '\"':
+                print(f"char index: {char_index}")
+                print(f"current character index: {self.current_char_index}")
+                self.current_token = curr_line[self.current_char_index:char_index]
+
+                self.current_char_index = char_index
+                break
 
             if self.is_delimiter(char) or char_index == len(curr_line) - 1:
                 # make the current token a substring of the current line from
                 # the current character index to char_index
-                self.current_token = curr_line[self.current_char_index:char_index]
+                self.current_token = curr_line[
+                                     self.current_char_index:char_index]
 
                 # then strip the current token of whitespace. There should be
                 # no newlines in the current token because we already removed
@@ -226,6 +230,11 @@ class JackTokenizer:
         # digit.
         if self.current_token[0] in self.digits:
             print("INT_CONST")
+
+        # if the first character in the current token is a digit, then it's a
+        # string constant, and we should print "STRING_CONST".
+        if self.current_token[0] == '"':
+            print("STRING_CONST")
 
         # if the current token is a keyword, then print KEYWORD.
         if self.current_token in self.keywords:
