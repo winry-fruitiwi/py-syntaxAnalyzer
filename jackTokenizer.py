@@ -166,23 +166,20 @@ class JackTokenizer:
         for char_index in range(self.current_char_index + 1, len(curr_line)):
             char = curr_line[char_index]
 
+            # if we find a quote, we treat it as a delimiter.
             if char == '\"':
-                print(f"char index: {char_index}")
-                print(f"current char index: {self.current_char_index}")
                 self.current_token = curr_line[self.current_char_index:char_index+1]
 
+                # to advance the current character index, we can make it
+                #
                 self.current_char_index = char_index
                 break
 
+            # if we find a delimiter, make the current token a substring of the
+            # current line from the current character index to char_index
             if self.is_delimiter(char) or char_index == len(curr_line) - 1:
-                # make the current token a substring of the current line from
-                # the current character index to char_index
                 self.current_token = curr_line[
                                      self.current_char_index:char_index]
-
-                # then strip the current token of whitespace. There should be
-                # no newlines in the current token because we already removed
-                # them.
 
                 self.current_char_index = char_index
                 break
@@ -224,7 +221,7 @@ class JackTokenizer:
         if self.current_token == "":
             return "Not a token."
 
-        # same as the above, except we add a newline later.
+        # same as the above, except we add a newline in syntaxAnalyzer.py.
         if self.current_token == " ":
             return "delimiter"
 

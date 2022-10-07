@@ -1,0 +1,127 @@
+[1mdiff --git a/jackTokenizer.py b/jackTokenizer.py[m
+[1mindex e542575..7392d7f 100644[m
+[1m--- a/jackTokenizer.py[m
+[1m+++ b/jackTokenizer.py[m
+[36m@@ -166,24 +166,21 @@[m [mclass JackTokenizer:[m
+         for char_index in range(self.current_char_index + 1, len(curr_line)):[m
+             char = curr_line[char_index][m
+ [m
+[32m+[m[32m            # if we find a quote, we treat it as a delimiter.[m
+             if char == '\"':[m
+[31m-                print(f"char index: {char_index}")[m
+[31m-                print(f"current char index: {self.current_char_index}")[m
+                 self.current_token = curr_line[self.current_char_index:char_index+1][m
+ [m
+[32m+[m[32m                # to advance the current character index, we can make it[m
+[32m+[m[32m                #[m
+                 self.current_char_index = char_index[m
+                 break[m
+ [m
+[32m+[m[32m            # if we find a delimiter, make the current token a substring of the[m
+[32m+[m[32m            # current line from the current character index to char_index[m
+             if self.is_delimiter(char) or char_index == len(curr_line) - 1:[m
+[31m-                # make the current token a substring of the current line from[m
+[31m-                # the current character index to char_index[m
+                 self.current_token = curr_line[[m
+                                      self.current_char_index:char_index][m
+ [m
+[31m-                # then strip the current token of whitespace. There should be[m
+[31m-                # no newlines in the current token because we already removed[m
+[31m-                # them.[m
+[31m-[m
+                 self.current_char_index = char_index[m
+                 break[m
+ [m
+[36m@@ -224,7 +221,7 @@[m [mclass JackTokenizer:[m
+         if self.current_token == "":[m
+             return "Not a token."[m
+ [m
+[31m-        # same as the above, except we add a newline later.[m
+[32m+[m[32m        # same as the above, except we add a newline in syntaxAnalyzer.py.[m
+         if self.current_token == " ":[m
+             return "delimiter"[m
+ [m
+[1mdiff --git a/syntaxAnalyzer.py b/syntaxAnalyzer.py[m
+[1mindex 4fa7362..107bcdc 100644[m
+[1m--- a/syntaxAnalyzer.py[m
+[1m+++ b/syntaxAnalyzer.py[m
+[36m@@ -10,35 +10,30 @@[m [mjack_tokenizer = JackTokenizer()[m
+ # while there are still more tokens, print out the tokenizer's current character[m
+ # and advance the current letter.[m
+ while jack_tokenizer.has_more_tokens():[m
+[32m+[m[32m    # advance the current character.[m
+     jack_tokenizer.advance()[m
+[31m-    print("current character: <" + jack_tokenizer.current_char + ">")[m
+[31m-    print("current token: <" + jack_tokenizer.current_token + ">")[m
+[31m-    print(jack_tokenizer.current_char_index)[m
+[31m-    print(jack_tokenizer.is_symbol(jack_tokenizer.current_char))[m
+[31m-    print(jack_tokenizer.is_delimiter(jack_tokenizer.current_char))[m
+ [m
+[32m+[m[32m    # get the token type of the tokenizer.[m
+     token_type = jack_tokenizer.token_type()[m
+ [m
+[32m+[m[32m    # there are several value that token_type can take on. I used match-case[m
+[32m+[m[32m    # statements here. Depending on the value that token_type takes on, I'll[m
+[32m+[m[32m    # add a tag describing it appropriately.[m
+     match token_type:[m
+         case TokenType.STRING_CONST:[m
+[31m-            print(jack_tokenizer.string_val())[m
+[31m-            XML.write(f"  <string>{jack_tokenizer.current_token}</string>\n")[m
+[32m+[m[32m            XML.write(f"  <stringConstant> {jack_tokenizer.string_val()} </stringConstant>\n")[m
+ [m
+         case TokenType.INT_CONST:[m
+[31m-            print(jack_tokenizer.int_val())[m
+[31m-            XML.write(f"  <int>{jack_tokenizer.current_token}</int>\n")[m
+[32m+[m[32m            XML.write(f"  <integerConstant> {jack_tokenizer.int_val()} </integerConstant>\n")[m
+ [m
+         case TokenType.SYMBOL:[m
+[31m-            print(jack_tokenizer.symbol())[m
+[31m-            XML.write(f"  <symbol>{jack_tokenizer.current_token}</symbol>\n")[m
+[32m+[m[32m            XML.write(f"  <symbol> {jack_tokenizer.symbol()} </symbol>\n")[m
+ [m
+         case TokenType.KEYWORD:[m
+[31m-            print(jack_tokenizer.key_word())[m
+[31m-            XML.write(f"  <keyword>{jack_tokenizer.current_token}</keyword>\n")[m
+[32m+[m[32m            XML.write(f"  <keyword> {jack_tokenizer.key_word()} </keyword>\n")[m
+ [m
+         case TokenType.IDENTIFIER:[m
+[31m-            print(jack_tokenizer.identifier())[m
+[31m-            XML.write(f"  <identifier>{jack_tokenizer.current_token}</identifier>\n")[m
+[32m+[m[32m            XML.write(f"  <identifier> {jack_tokenizer.identifier()} </identifier>\n")[m
+ [m
+         case "delimiter":[m
+             print("delim")[m
+[1mdiff --git a/test.xml b/test.xml[m
+[1mindex 6d3f231..9a22997 100644[m
+[1m--- a/test.xml[m
+[1m+++ b/test.xml[m
+[36m@@ -1,17 +1,17 @@[m
+ <token>[m
+[31m-  <keyword>let</keyword>[m
+[31m-  <identifier>x</identifier>[m
+[31m-  <symbol>;</symbol>[m
+[32m+[m[32m  <keyword> let </keyword>[m
+[32m+[m[32m  <identifier> x </identifier>[m
+[32m+[m[32m  <symbol> ; </symbol>[m
+ [m
+[31m-  <keyword>let</keyword>[m
+[31m-  <identifier>y</identifier>[m
+[31m-  <symbol>=</symbol>[m
+[31m-  <int>0</int>[m
+[31m-  <symbol>;</symbol>[m
+[32m+[m[32m  <keyword> let </keyword>[m
+[32m+[m[32m  <identifier> y </identifier>[m
+[32m+[m[32m  <symbol> = </symbol>[m
+[32m+[m[32m  <integerConstant> 0 </integerConstant>[m
+[32m+[m[32m  <symbol> ; </symbol>[m
+ [m
+[31m-  <string>"heyo!"</string>[m
+[32m+[m[32m  <stringConstant> heyo! </stringConstant>[m
+ [m
+[31m-  <string>"hello"</string>[m
+[32m+[m[32m  <stringConstant> hello </stringConstant>[m
+ [m
+[31m-  <string>"hi"</string>[m
+[32m+[m[32m  <stringConstant> hi </stringConstant>[m
+ </token>[m
+\ No newline at end of file[m

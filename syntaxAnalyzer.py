@@ -10,35 +10,30 @@ jack_tokenizer = JackTokenizer()
 # while there are still more tokens, print out the tokenizer's current character
 # and advance the current letter.
 while jack_tokenizer.has_more_tokens():
+    # advance the current character.
     jack_tokenizer.advance()
-    print("current character: <" + jack_tokenizer.current_char + ">")
-    print("current token: <" + jack_tokenizer.current_token + ">")
-    print(jack_tokenizer.current_char_index)
-    print(jack_tokenizer.is_symbol(jack_tokenizer.current_char))
-    print(jack_tokenizer.is_delimiter(jack_tokenizer.current_char))
 
+    # get the token type of the tokenizer.
     token_type = jack_tokenizer.token_type()
 
+    # there are several value that token_type can take on. I used match-case
+    # statements here. Depending on the value that token_type takes on, I'll
+    # add a tag describing it appropriately.
     match token_type:
         case TokenType.STRING_CONST:
-            print(jack_tokenizer.string_val())
-            XML.write(f"  <string>{jack_tokenizer.current_token}</string>\n")
+            XML.write(f"  <stringConstant> {jack_tokenizer.string_val()} </stringConstant>\n")
 
         case TokenType.INT_CONST:
-            print(jack_tokenizer.int_val())
-            XML.write(f"  <int>{jack_tokenizer.current_token}</int>\n")
+            XML.write(f"  <integerConstant> {jack_tokenizer.int_val()} </integerConstant>\n")
 
         case TokenType.SYMBOL:
-            print(jack_tokenizer.symbol())
-            XML.write(f"  <symbol>{jack_tokenizer.current_token}</symbol>\n")
+            XML.write(f"  <symbol> {jack_tokenizer.symbol()} </symbol>\n")
 
         case TokenType.KEYWORD:
-            print(jack_tokenizer.key_word())
-            XML.write(f"  <keyword>{jack_tokenizer.current_token}</keyword>\n")
+            XML.write(f"  <keyword> {jack_tokenizer.key_word()} </keyword>\n")
 
         case TokenType.IDENTIFIER:
-            print(jack_tokenizer.identifier())
-            XML.write(f"  <identifier>{jack_tokenizer.current_token}</identifier>\n")
+            XML.write(f"  <identifier> {jack_tokenizer.identifier()} </identifier>\n")
 
         case "delimiter":
             print("delim")
@@ -49,4 +44,7 @@ while jack_tokenizer.has_more_tokens():
 
     print("\n")
 
+
 XML.write("</token>")
+XML.write("\n")
+XML.close()

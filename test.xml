@@ -1,17 +1,17 @@
 <token>
-  <keyword>let</keyword>
-  <identifier>x</identifier>
-  <symbol>;</symbol>
+  <keyword> let </keyword>
+  <identifier> x </identifier>
+  <symbol> ; </symbol>
 
-  <keyword>let</keyword>
-  <identifier>y</identifier>
-  <symbol>=</symbol>
-  <int>0</int>
-  <symbol>;</symbol>
+  <keyword> let </keyword>
+  <identifier> y </identifier>
+  <symbol> = </symbol>
+  <integerConstant> 0 </integerConstant>
+  <symbol> ; </symbol>
 
-  <string>"heyo!"</string>
+  <stringConstant> heyo! </stringConstant>
 
-  <string>"hello"</string>
+  <stringConstant> hello </stringConstant>
 
-  <string>"hi"</string>
+  <stringConstant> hi </stringConstant>
 </token>
