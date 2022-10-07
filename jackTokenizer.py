@@ -183,7 +183,6 @@ class JackTokenizer:
                 # then strip the current token of whitespace. There should be
                 # no newlines in the current token because we already removed
                 # them.
-                self.current_token = self.current_token.strip(" ")
 
                 self.current_char_index = char_index
                 break
@@ -225,13 +224,19 @@ class JackTokenizer:
         if self.current_token == "":
             return "Not a token."
 
+        # same as the above, except we add a newline later.
+        if self.current_token == " ":
+            return "delimiter"
+
+        self.current_token = self.current_token.strip(" ")
+
         # if the first character in the current token is a digit, then we know
         # it must be an integer constant because nothing else can start with a
         # digit.
         if self.current_token[0] in self.digits:
             return TokenType.INT_CONST
 
-        # if the first character in the current token is a digit, then it's a
+        # if the first character in the current token is a quote, then it's a
         # string constant, and we should print "STRING_CONST".
         elif self.current_token[0] == '"':
             return TokenType.STRING_CONST
@@ -240,7 +245,7 @@ class JackTokenizer:
         elif self.current_token in self.keywords:
             return TokenType.KEYWORD
 
-        # do the same for symbols.
+        # if the current token is a symbol, then print SYMBOL.
         elif self.current_token in self.symbols:
             return TokenType.SYMBOL
 

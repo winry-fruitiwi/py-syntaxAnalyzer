@@ -2,12 +2,16 @@
   <keyword>let</keyword>
   <identifier>x</identifier>
   <symbol>;</symbol>
+
   <keyword>let</keyword>
   <identifier>y</identifier>
   <symbol>=</symbol>
   <int>0</int>
   <symbol>;</symbol>
+
   <string>"heyo!"</string>
+
   <string>"hello"</string>
+
   <string>"hi"</string>
 </token>
