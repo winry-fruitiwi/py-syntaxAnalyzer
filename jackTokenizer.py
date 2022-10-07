@@ -1,3 +1,6 @@
+from TokenType import *
+
+
 class JackTokenizer:
     def __init__(self):
         # open the input file.
@@ -68,9 +71,6 @@ class JackTokenizer:
             '9'
         ]
 
-        # the previous delimiter index I encountered
-        self.previous_char_index = 0
-
         # a list of the file's lines that will be stripped of whitespace, new
         # lines, full line comments, and inline comments.
         self.stripped_lines = []
@@ -115,7 +115,10 @@ class JackTokenizer:
             except ValueError:
                 pass
 
-            self.stripped_lines.append(stripped_line + " ")
+            if stripped_line[-1] != '"':
+                self.stripped_lines.append(stripped_line + " ")
+            else:
+                self.stripped_lines.append(stripped_line)
 
         # the two indices below handle where I am in my list of stripped lines.
         self.current_line_index = 0
@@ -165,8 +168,8 @@ class JackTokenizer:
 
             if char == '\"':
                 print(f"char index: {char_index}")
-                print(f"current character index: {self.current_char_index}")
-                self.current_token = curr_line[self.current_char_index:char_index]
+                print(f"current char index: {self.current_char_index}")
+                self.current_token = curr_line[self.current_char_index:char_index+1]
 
                 self.current_char_index = char_index
                 break
@@ -215,54 +218,56 @@ class JackTokenizer:
 
         self.current_char = curr_line[self.current_char_index]
 
-        # print the previous character index
-        print(self.previous_char_index)
-
     # checks the type of the current token
     def token_type(self):
         # if we haven't initialized the current token or it's the start of the
         # line, do nothing.
         if self.current_token == "":
-            return
+            return "Not a token."
 
         # if the first character in the current token is a digit, then we know
         # it must be an integer constant because nothing else can start with a
         # digit.
         if self.current_token[0] in self.digits:
-            print("INT_CONST")
+            return TokenType.INT_CONST
 
         # if the first character in the current token is a digit, then it's a
         # string constant, and we should print "STRING_CONST".
-        if self.current_token[0] == '"':
-            print("STRING_CONST")
+        elif self.current_token[0] == '"':
+            return TokenType.STRING_CONST
 
         # if the current token is a keyword, then print KEYWORD.
-        if self.current_token in self.keywords:
-            print("KEYWORD")
+        elif self.current_token in self.keywords:
+            return TokenType.KEYWORD
 
         # do the same for symbols.
-        if self.current_token in self.symbols:
-            print("SYMBOL")
+        elif self.current_token in self.symbols:
+            return TokenType.SYMBOL
+
+        # finally, if none of the above are true, then current_token must be an
+        # IDENTIFIER, so we print "IDENTIFIER".
+        else:
+            return TokenType.IDENTIFIER
 
     # returns current token if it's a keyword
     def key_word(self):
-        pass
+        return self.current_token
 
     # returns current token if it's a symbol
     def symbol(self):
-        pass
+        return self.current_token
 
     # returns current token if it's an identifier
     def identifier(self):
-        pass
+        return self.current_token
 
     # returns current token if it's a integer constant
     def int_val(self):
-        pass
+        return self.current_token
 
     # returns current token if it's a string constant. Does not handle quotes.
     def string_val(self):
-        pass
+        return self.current_token.strip('"')
 
     # returns if current character is a symbol.
     def is_symbol(self, char):
