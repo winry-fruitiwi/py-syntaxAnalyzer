@@ -36,3 +36,7 @@ while jack_tokenizer.has_more_tokens():
             print("not a token")
 
     print("\n")
+
+
+file = open("test.xml", "w")
+file.write("<tokens>hello!</tokens>")
