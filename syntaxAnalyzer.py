@@ -2,10 +2,10 @@ from jackTokenizer import *
 from TokenType import *
 
 XML = open("test.xml", "w")
-XML.write("<token>")
+XML.write("<tokens>")
 
 # add a jackTokenizer
-jack_tokenizer = JackTokenizer()
+jack_tokenizer = JackTokenizer("C:/Users/Winry/Dropbox/code/nand2tetris/winry/nand2tetris/projects/10/Square/SquareGame.jack")
 
 # while there are still more tokens, print out the tokenizer's current character
 # and advance the current letter.
@@ -45,6 +45,6 @@ while jack_tokenizer.has_more_tokens():
     print("\n")
 
 
-XML.write("</token>")
+XML.write("</tokens>")
 XML.write("\n")
 XML.close()

@@ -2,10 +2,10 @@ from TokenType import *
 
 
 class JackTokenizer:
-    def __init__(self):
+    def __init__(self, path):
         # open the input file.
         self.current_token = None
-        self.input_file = open("test.jack").readlines()
+        self.input_file = open(path).readlines()
 
         # a list of all the symbols in the jack language.
         self.symbols = [
@@ -75,50 +75,101 @@ class JackTokenizer:
         # lines, full line comments, and inline comments.
         self.stripped_lines = []
 
+        # a flag for when I've found a multi-line comment.
+        in_multiline_comment = False
+
         for line in self.input_file:
             # strip the whitespace, then newlines and whitespace before the
             # newlines.
             stripped_line = line.strip(" ").strip("\n").strip(" ")
-            try:
-                # if the stripped line is an empty space, don't append it to
-                # the list of stripped lines.
-                if stripped_line == "":
-                    continue
+            if not in_multiline_comment:
+                try:
+                    # if the stripped line is an empty space, don't append it to
+                    # the list of stripped lines.
+                    if stripped_line == "":
+                        continue
 
-                # if the stripped line starts with a //, it's a comment, so we
-                # don't append it to the list of stripped lines.
-                if stripped_line[0:2] == "//":
-                    continue
+                    # if the stripped line starts with a //, it's a comment, so we
+                    # don't append it to the list of stripped lines.
+                    if stripped_line[0:2] == "//":
+                        continue
+                    if stripped_line[0:3] == "/**":
+                        in_multiline_comment = True
+                        continue
 
-                # this is why there's a try-except block. index() returns a
-                # ValueError if the substring doesn't exist. in this block,
-                # I'm checking if there is a //, which signals the beginning
-                # of a comment no matter where it is.
-                if stripped_line.index("//"):
-                    # if there is an index, then take a slice from 0 to the
-                    # index.
-                    stripped_line = stripped_line[0:stripped_line.index("//")]
+                    # this is why there's a try-except block. index() returns a
+                    # ValueError if the substring doesn't exist. in this block,
+                    # I'm checking if there is a //, which signals the beginning
+                    # of a comment no matter where it is.
+                    if stripped_line.index("//"):
+                        # if there is an index, then take a slice from 0 to the
+                        # index.
+                        stripped_line = stripped_line[0:stripped_line.index("//")]
 
-                    # most inline comments will have whitespace between them
-                    # and the code that they're explaining. We need to strip
-                    # that.
+                        # most inline comments will have whitespace between them
+                        # and the code that they're explaining. We need to strip
+                        # that.
+
+                    # do the same for multiline comments.
                     stripped_line = stripped_line.strip(" ")
+                    if stripped_line.index("/**"):
 
-                # finally, if the stripped line is now just an empty line,
-                # signaling that this was a full-line comment, then we don't
-                # have to append the line to self.stripped_lines anymore.
-                if stripped_line == "":
-                    continue
+                        stripped_line = stripped_line[
+                                        0:stripped_line.index("/**")]
 
-            # if there is no //, then a ValueError will be raised and the
-            # except block will fire.
-            except ValueError:
-                pass
+                        stripped_line = stripped_line.strip(" ")
 
-            if stripped_line[-1] != '"':
-                self.stripped_lines.append(stripped_line + " ")
+                        in_multiline_comment = True
+                    if stripped_line[0:2] == "*/":
+                        in_multiline_comment = False
+                        continue
+                    try:
+                        if stripped_line.index("*/"):
+                            stripped_line = stripped_line[
+                                            stripped_line.index("*/"):]
+                            stripped_line = stripped_line.strip(" ")
+                            in_multiline_comment = False
+                    except ValueError:
+                        pass
+
+
+                    # finally, if the stripped line is now just an empty line,
+                    # signaling that this was a full-line comment, then we don't
+                    # have to append the line to self.stripped_lines anymore.
+                    if stripped_line == "":
+                        continue
+
+                # if there is no //, then a ValueError will be raised and the
+                # except block will fire.
+                except ValueError:
+                    pass
+
+                if stripped_line[-1] != '"':
+                    self.stripped_lines.append(stripped_line + " ")
+                else:
+                    self.stripped_lines.append(stripped_line)
+
             else:
-                self.stripped_lines.append(stripped_line)
+                if stripped_line[0:2] == "*/":
+                    in_multiline_comment = False
+                    continue
+                try:
+                    if stripped_line.index("*/"):
+                        stripped_line = stripped_line[
+                                        stripped_line.index("*/")+1:-2]
+
+                        stripped_line = stripped_line.strip(" ")
+
+                        in_multiline_comment = False
+
+                        if stripped_line[-1] != '"':
+                            self.stripped_lines.append(stripped_line + " ")
+                        else:
+                            self.stripped_lines.append(stripped_line)
+                except ValueError:
+                    pass
+                except IndexError:
+                    pass
 
         # the two indices below handle where I am in my list of stripped lines.
         self.current_line_index = 0
