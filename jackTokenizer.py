@@ -93,9 +93,21 @@ class JackTokenizer:
                     # don't append it to the list of stripped lines.
                     if stripped_line[0:2] == "//":
                         continue
-                    if stripped_line[0:3] == "/**":
-                        in_multiline_comment = True
+
+                    try:
+                        if stripped_line[0:3] == "/**":
+                            in_multiline_comment = True
+                            stripped_line = stripped_line[3:]
+
+                            if stripped_line == "":
+                                continue
+
+                        if stripped_line.index("*/"):
+                            in_multiline_comment = False
+
                         continue
+                    except ValueError:
+                        pass
 
                     # this is why there's a try-except block. index() returns a
                     # ValueError if the substring doesn't exist. in this block,
@@ -202,7 +214,7 @@ class JackTokenizer:
             return
 
         # if I'm done finding all the delimiters, advance to the next line
-        if (self.current_char_index == len(curr_line) - 1
+        if (self.current_char_index >= len(curr_line) - 1
                 and self.current_line_index < len(self.stripped_lines) - 1):
             self.current_line_index += 1
             self.current_char_index = 0
@@ -211,29 +223,33 @@ class JackTokenizer:
             self.current_token = ""
             return
 
-        # for each character in the current line, starting from the current
-        # character index, check if the character at curr_line[char_index]
-        # is a delimiter. if it is, make current_char_index the char_index.
-        for char_index in range(self.current_char_index + 1, len(curr_line)):
-            char = curr_line[char_index]
+        if self.current_char in self.symbols:
+            self.current_token = self.current_char
+            self.current_char_index += 1
+        else:
+            # for each character in the current line, starting from the current
+            # character index, check if the character at curr_line[char_index]
+            # is a delimiter. if it is, make current_char_index the char_index.
+            for char_index in range(self.current_char_index + 1, len(curr_line)):
+                char = curr_line[char_index]
 
-            # if we find a quote, we treat it as a delimiter.
-            if char == '\"':
-                self.current_token = curr_line[self.current_char_index:char_index+1]
+                # if we find a quote, we treat it as a delimiter.
+                if char == '\"':
+                    self.current_token = curr_line[self.current_char_index:char_index+1]
 
-                # to advance the current character index, we can make it
-                #
-                self.current_char_index = char_index
-                break
+                    # to advance the current character index, we can make it
+                    #
+                    self.current_char_index = char_index
+                    break
 
-            # if we find a delimiter, make the current token a substring of the
-            # current line from the current character index to char_index
-            if self.is_delimiter(char) or char_index == len(curr_line) - 1:
-                self.current_token = curr_line[
-                                     self.current_char_index:char_index]
+                # if we find a delimiter, make the current token a substring of the
+                # current line from the current character index to char_index
+                if self.is_delimiter(char) or char_index == len(curr_line) - 1:
+                    self.current_token = curr_line[
+                                         self.current_char_index:char_index]
 
-                self.current_char_index = char_index
-                break
+                    self.current_char_index = char_index
+                    break
 
         # a list of all the delimiters I have encountered
         delimiter_list = [0]
@@ -308,6 +324,15 @@ class JackTokenizer:
 
     # returns current token if it's a symbol
     def symbol(self):
+        if self.current_token == "<":
+            return "&lt;"
+
+        if self.current_token == ">":
+            return "&gt;"
+
+        if self.current_token == "&":
+            return "&amp;"
+
         return self.current_token
 
     # returns current token if it's an identifier
