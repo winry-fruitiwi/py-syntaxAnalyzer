@@ -1,11 +1,24 @@
+"""
+The main file, where I make JackTokenizers and CompilationEngines!
+
+Files I've tested with the current version of code:
+    10/Square/Main.jack
+    10/Square/Square.jack
+    10/Square/SquareGame.jack
+
+"""
+
 from jackTokenizer import *
 from TokenType import *
 
 XML = open("test.xml", "w")
 XML.write("<tokens>\n")
 
+# the root of all files I'll need to test here.
+file_root = "C:/Users/Winry/Dropbox/code/nand2tetris/winry/nand2tetris/projects/"
+
 # add a jackTokenizer
-jack_tokenizer = JackTokenizer("C:/Users/Winry/Dropbox/code/nand2tetris/winry/nand2tetris/projects/10/Square/Main.jack")
+jack_tokenizer = JackTokenizer(file_root + "10/Square/SquareGame.jack")
 
 # while there are still more tokens, print out the tokenizer's current character
 # and advance the current letter.
