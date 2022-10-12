@@ -227,7 +227,8 @@ class JackTokenizer:
         if self.current_char in self.symbols:
             self.current_token = self.current_char
             self.current_char_index += 1
-        # if the current character is a double
+        # if the current character is a double quote, make the current token
+        # a string from the current character index to the next double quote
         elif self.current_char == '"':
             try:
                 next_quote_index = curr_line.index('"', self.current_char_index + 1)
@@ -245,7 +246,7 @@ class JackTokenizer:
 
                 # if we find a quote, we treat it as a delimiter.
                 if char == '\"':
-                    self.current_token = curr_line[self.current_char_index:char_index+1]
+                    self.current_token = curr_line[self.current_char_index:char_index]
 
                     # to advance the current character index, we can make it
                     #
