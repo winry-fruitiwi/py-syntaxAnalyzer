@@ -223,9 +223,19 @@ class JackTokenizer:
             self.current_token = ""
             return
 
+        # if the current character is a symbol, immediately make it the next token
         if self.current_char in self.symbols:
             self.current_token = self.current_char
             self.current_char_index += 1
+        # if the current character is a double
+        elif self.current_char == '"':
+            try:
+                next_quote_index = curr_line.index('"', self.current_char_index + 1)
+                self.current_token = curr_line[self.current_char_index:next_quote_index]
+
+                self.current_char_index = next_quote_index + 1
+            except ValueError:
+                pass
         else:
             # for each character in the current line, starting from the current
             # character index, check if the character at curr_line[char_index]

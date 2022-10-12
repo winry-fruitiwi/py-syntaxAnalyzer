@@ -41,29 +41,29 @@ JackTokenizer
 		☒ am I on the last line and is the next space/symbol/end_of_line the last index?
 			return !this_result
 
-	☐ tokenType
+	☒ tokenType
 		"Returns KEYWORD, SYMBOL, IDENTIFIER, INT_CONST, STRING_CONST as token type."
 		General plan:
-			☐ if the first letter is in digits, return INT_CONST
-			☐ elif the first letter is a double quote, return STRING_CONST
-			☐ elif the current token is in self.symbols, return SYMBOL
-			☐ elif the current token is in self.keywords, return KEYWORD
-			☐ otherwise, the current token must be an IDENTIFIER
+			☒ if the first letter is in digits, return INT_CONST
+			☒ elif the first letter is a double quote, return STRING_CONST
+			☒ elif the current token is in self.symbols, return SYMBOL
+			☒ elif the current token is in self.keywords, return KEYWORD
+			☒ otherwise, the current token must be an IDENTIFIER
 
-	☐ stringVal
-		☐ return current token with quotes
-		☐ return current token without quotes (strip('"'))
+	☒ stringVal
+		☒ return current token with quotes
+		☒ return current token without quotes (strip('"'))
 
-	☐ keyWord
+	☒ keyWord
 		☐ return current token
 
-	☐ symbol
+	☒ symbol
 		☐ return current token
 
-	☐ identifier
+	☒ identifier
 		☐ return current token
 
-	☐ intVal
+	☒ intVal
 		☐ return current token
 
 
