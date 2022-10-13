@@ -81,7 +81,8 @@ class JackTokenizer:
         for line in self.input_file:
             # strip the whitespace, then newlines and whitespace before the
             # newlines.
-            stripped_line = line.strip(" ").strip("\n").strip(" ")
+            stripped_line = line.strip("\t").strip(" ").strip("\n").strip(" ").strip("\t")
+
             if not in_multiline_comment:
                 try:
                     # if the stripped line is an empty space, don't append it to
@@ -230,13 +231,12 @@ class JackTokenizer:
         # if the current character is a double quote, make the current token
         # a string from the current character index to the next double quote
         elif self.current_char == '"':
-            try:
-                next_quote_index = curr_line.index('"', self.current_char_index + 1)
-                self.current_token = curr_line[self.current_char_index:next_quote_index]
+            next_quote_index = curr_line.index('"', self.current_char_index + 1)
+            self.current_token = curr_line[self.current_char_index:next_quote_index + 1]
 
-                self.current_char_index = next_quote_index + 1
-            except ValueError:
-                pass
+            self.current_char_index = next_quote_index + 1
+
+            print(self.current_token)
         else:
             # for each character in the current line, starting from the current
             # character index, check if the character at curr_line[char_index]
@@ -249,7 +249,7 @@ class JackTokenizer:
                     self.current_token = curr_line[self.current_char_index:char_index]
 
                     # to advance the current character index, we can make it
-                    #
+                    # the character index with the delim we just found
                     self.current_char_index = char_index
                     break
 

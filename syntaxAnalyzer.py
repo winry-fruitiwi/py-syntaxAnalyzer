@@ -18,7 +18,8 @@ XML.write("<tokens>\n")
 file_root = "C:/Users/Winry/Dropbox/code/nand2tetris/winry/nand2tetris/projects/"
 
 # add a jackTokenizer
-jack_tokenizer = JackTokenizer(file_root + "10/Square/SquareGame.jack")
+jack_tokenizer = JackTokenizer(file_root + "10/ArrayTest/Main"
+                                           ".jack")
 
 # while there are still more tokens, print out the tokenizer's current character
 # and advance the current letter.
