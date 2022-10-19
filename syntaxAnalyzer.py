@@ -9,6 +9,7 @@ Files I've tested with the current version of code:
 """
 
 from jackTokenizer import *
+from compilationEngine import *
 from TokenType import *
 
 XML = open("test.xml", "w")
@@ -20,6 +21,8 @@ file_root = "C:/Users/Winry/Dropbox/code/nand2tetris/winry/nand2tetris/projects/
 # add a jackTokenizer
 jack_tokenizer = JackTokenizer(file_root + "10/Square/Main"
                                            ".jack")
+
+compilation_engine = CompilationEngine(file_root + "10/Square/Main.jack")
 
 # while there are still more tokens, print out the tokenizer's current character
 # and advance the current letter.

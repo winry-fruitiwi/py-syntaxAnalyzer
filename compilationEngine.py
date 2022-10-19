@@ -1,6 +1,10 @@
+from jackTokenizer import *
+
+
 class CompilationEngine:
-    def __init__(self):
-        pass
+    def __init__(self, path):
+        self.tokenizer = JackTokenizer(path)
+        self.output = open("test.xml", "w")
 
     # compiles a complete class. This needs to be called immediately after
     # an instance is initialized.
@@ -76,4 +80,6 @@ class CompilationEngine:
     # boolean, determines whether to advance. We can sometimes not advance when
     # dealing with expressions.
     def eat(self, token, advance):
-        pass
+        self.tokenizer.advance()
+        current_token = self.tokenizer.current_token
+        assert token == current_token
