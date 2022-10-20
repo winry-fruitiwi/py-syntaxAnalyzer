@@ -25,6 +25,18 @@ class CompilationEngine:
 
     # compiles a variable declaration.
     def compile_var_dec(self):
+        """
+        <varDec>
+            <keyword> var </keyword>
+            <keyword> int </keyword>
+            <identifier> i </identifier>
+            <symbol> , </symbol>
+            <identifier> sum </identifier>
+            <symbol> ; </symbol>
+        </varDec>
+        :return:
+        """
+
         pass
 
     # compiles a sequence of statements. doesn't handle enclosing {}s. grammar:
