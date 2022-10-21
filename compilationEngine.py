@@ -46,6 +46,12 @@ class CompilationEngine:
     def compile_statements(self):
         pass
 
+    # compiles a sequence of statements inside curly brackets
+    def compile_statements_in_brackets(self):
+        self.eat("{", True)
+        self.compile_statements()
+        self.eat("}", False)
+
     # helper functions!
 
     # compiles a single statement. A helper function for compile_statements.
@@ -104,7 +110,7 @@ class CompilationEngine:
         """
         pass
 
-    # compiles a while statement. grammar: while (expression){statement}
+    # compiles a while statement. grammar: while (expression) {statements}
     def compile_while_statement(self):
         """
         <whileStatement>
@@ -144,6 +150,18 @@ class CompilationEngine:
 
         :return:
         """
+        # while + write to output
+        self.output.write("<whileStatement>\n")
+        self.eat("while", False)
+
+        # compile (expression)
+        self.compile_expr_in_parens()
+
+        # compile {statements}
+        self.compile_statements_in_brackets()
+
+        # write closing tag
+        self.output.write("</whileStatement>\n")
 
         pass
 
@@ -173,6 +191,12 @@ class CompilationEngine:
     def compile_expression(self):
         pass
 
+    # compiles an expression within parentheses.
+    def compile_expr_in_parens(self):
+        self.eat("(", True)
+        self.compile_expression()
+        self.eat(")", False)
+
     # compiles a term.
     def compile_term(self):
         pass
@@ -185,6 +209,44 @@ class CompilationEngine:
     # boolean, determines whether to advance. We can sometimes not advance when
     # dealing with expressions.
     def eat(self, token, advance):
-        self.tokenizer.advance()
+        # advance the current character if second argument is true.
+        if advance:
+            self.tokenizer.advance()
+            print(self.tokenizer.current_token)
+            print("advanced!")
+
+        # get the token type of the tokenizer.
+        token_type = self.tokenizer.token_type()
+
+        if token_type == "delimiter" or token_type == "Not a token.":
+            self.tokenizer.advance()
+
+        # there are several value that token_type can take on. I used match-case
+        # statements here. Depending on the value that token_type takes on, I'll
+        # add a tag describing it appropriately.
+        match token_type:
+            case TokenType.STRING_CONST:
+                self.output.write(
+                    f"<stringConstant> {self.tokenizer.string_val()} </stringConstant>\n")
+
+            case TokenType.INT_CONST:
+                self.output.write(
+                    f"<integerConstant> {self.tokenizer.int_val()} </integerConstant>\n")
+
+            case TokenType.SYMBOL:
+                self.output.write(f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
+
+            case TokenType.KEYWORD:
+                self.output.write(f"<keyword> {self.tokenizer.key_word()} </keyword>\n")
+
+            case TokenType.IDENTIFIER:
+                self.output.write(
+                    f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
+
+        print(self.tokenizer.current_token)
         current_token = self.tokenizer.current_token
         assert token == current_token
+
+    # a simple function that tests a single compile statement.
+    def test_compile(self):
+        self.compile_while_statement()
