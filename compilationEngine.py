@@ -23,15 +23,13 @@ class CompilationEngine:
     def compile_parameter_list(self):
         pass
 
-    # compiles a variable declaration.
+    # compiles a variable declaration. grammar: var type varName(,varName)*;
     def compile_var_dec(self):
         """
         <varDec>
             <keyword> var </keyword>
-            <keyword> int </keyword>
-            <identifier> i </identifier>
-            <symbol> , </symbol>
-            <identifier> sum </identifier>
+            <identifier> SquareGame </identifier>
+            <identifier> game </identifier>
             <symbol> ; </symbol>
         </varDec>
         :return:
@@ -53,23 +51,118 @@ class CompilationEngine:
     # compiles a single statement. A helper function for compile_statements.
     # grammar: letStatement|ifStatement|whileStatement|doStatement|returnStatement
     def compile_statement(self):
+        """
+
+        :return:
+        """
         pass
 
     # compiles a let statement. grammar: let varName([expression])?=expression;
     def compile_let_statement(self):
+        """
+        <letStatement>
+          <keyword> let </keyword>
+          <identifier> game </identifier>
+          <symbol> = </symbol>
+          <expression>
+            <term>
+              <identifier> game </identifier>
+            </term>
+          </expression>
+          <symbol> ; </symbol>
+        </letStatement>
+
+        :return:
+        """
         pass
 
     # compiles an if statement. grammar: if (expression){statement} (else
     # {statements})?
     def compile_if_statement(self):
+        """
+        <ifStatement>
+          <keyword> if </keyword>
+          <symbol> ( </symbol>
+          <expression>
+            <term>
+              <identifier> b </identifier>
+            </term>
+          </expression>
+          <symbol> ) </symbol>
+          <symbol> { </symbol>
+          <statements>
+          </statements>
+          <symbol> } </symbol>
+          <keyword> else </keyword>
+          <symbol> { </symbol>
+          <statements>
+          </statements>
+          <symbol> } </symbol>
+        </ifStatement>
+
+        :return:
+        """
         pass
 
     # compiles a while statement. grammar: while (expression){statement}
     def compile_while_statement(self):
+        """
+        <whileStatement>
+          <keyword> while </keyword>
+          <symbol> ( </symbol>
+          <expression>
+            <term>
+              <identifier> key </identifier>
+            </term>
+          </expression>
+          <symbol> ) </symbol>
+          <symbol> { </symbol>
+          <statements>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> key </identifier>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> key </identifier>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <doStatement>
+              <keyword> do </keyword>
+              <identifier> moveSquare </identifier>
+              <symbol> ( </symbol>
+              <expressionList>
+              </expressionList>
+              <symbol> ) </symbol>
+              <symbol> ; </symbol>
+            </doStatement>
+          </statements>
+          <symbol> } </symbol>
+        </whileStatement>
+
+        :return:
+        """
+
         pass
 
     # compiles a do statement. grammar: do subRoutineCall;
     def compile_do_statement(self):
+        """
+        <doStatement>
+          <keyword> do </keyword>
+          <identifier> moveSquare </identifier>
+          <symbol> ( </symbol>
+          <expressionList>
+          </expressionList>
+          <symbol> ) </symbol>
+          <symbol> ; </symbol>
+        </doStatement>
+
+        :return:
+        """
+
         pass
 
     # compiles a return statement. grammar: return expression?;
