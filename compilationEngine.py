@@ -110,20 +110,25 @@ class CompilationEngine:
         """
 
         # write opening tag, eat if
-
+        self.output.write("<ifStatement>\n")
+        self.eat("if", True)
 
         # eat expression in parens
-
+        self.compile_expr_in_parens()
 
         # eat statement in brackets
-
+        self.compile_statements_in_brackets()
 
         # use try-except and eat else
         try:
-            pass
+            self.eat("else", True)
             # if this goes through successfully, eat statements in brackets
+            self.compile_statements_in_brackets()
         except AssertionError:
             pass
+
+        # write ending tag to output
+        self.output.write("</ifStatement>")
 
         # alternatively, I can let eat() return false if eating didn't go as
         # planned so that I don't need a try-except block, which may not be
@@ -241,15 +246,10 @@ class CompilationEngine:
 
         self.output.write(f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
-    # asserts that the next token is its first argument. its second argument, a
-    # boolean, determines whether to advance. We can sometimes not advance when
-    # dealing with expressions.
-    def eat(self, token, advance):
-        # advance the current character if second argument is true.
-        if advance:
-            self.tokenizer.advance()
-            print("token: " + self.tokenizer.current_token)
-            print("advanced!")
+    # advances the tokenizer and checks if it's a delimiter or not a token.
+    def advance(self):
+        # advance the tokenizer.
+        self.tokenizer.advance()
 
         # get the token type of the tokenizer.
         token_type = self.tokenizer.token_type()
@@ -260,6 +260,18 @@ class CompilationEngine:
             self.tokenizer.advance()
             token_type = self.tokenizer.token_type()
             print("token: " + self.tokenizer.current_token)
+
+    # asserts that the next token is its first argument. its second argument, a
+    # boolean, determines whether to advance. We can sometimes not advance when
+    # dealing with expressions.
+    def eat(self, token, advance):
+        # advance the current character if second argument is true.
+        if advance:
+            self.advance()
+            print("token: " + self.tokenizer.current_token)
+            print("advanced!")
+
+        token_type = self.tokenizer.token_type()
 
         # there are several value that token_type can take on. I used match-case
         # statements here. Depending on the value that token_type takes on, I'll
@@ -290,4 +302,4 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def test_compile(self):
-        self.compile_while_statement()
+        self.compile_if_statement()
