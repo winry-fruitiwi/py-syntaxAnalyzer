@@ -108,7 +108,26 @@ class CompilationEngine:
 
         :return:
         """
-        pass
+
+        # write opening tag, eat if
+
+
+        # eat expression in parens
+
+
+        # eat statement in brackets
+
+
+        # use try-except and eat else
+        try:
+            pass
+            # if this goes through successfully, eat statements in brackets
+        except AssertionError:
+            pass
+
+        # alternatively, I can let eat() return false if eating didn't go as
+        # planned so that I don't need a try-except block, which may not be
+        # as efficient.
 
     # compiles a while statement. grammar: while (expression) {statements}
     def compile_while_statement(self):
@@ -236,8 +255,8 @@ class CompilationEngine:
         token_type = self.tokenizer.token_type()
 
         # if the token is the start of a line or a delimiter, advance again,
-        #
-        if token_type == "delimiter" or token_type == "Not a token.":
+        # setting the token type again as well
+        while token_type == "delimiter" or token_type == "Not a token.":
             self.tokenizer.advance()
             token_type = self.tokenizer.token_type()
             print("token: " + self.tokenizer.current_token)
