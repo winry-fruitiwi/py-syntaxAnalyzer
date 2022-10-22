@@ -50,7 +50,7 @@ class CompilationEngine:
     def compile_statements_in_brackets(self):
         self.eat("{", True)
         self.compile_statements()
-        self.eat("}", False)
+        self.eat("}", True)
 
     # helper functions!
 
@@ -188,22 +188,39 @@ class CompilationEngine:
         pass
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
+    # for now call compile_simple_term here
     def compile_expression(self):
-        pass
+        self.compile_simple_term()
 
     # compiles an expression within parentheses.
     def compile_expr_in_parens(self):
         self.eat("(", True)
         self.compile_expression()
-        self.eat(")", False)
+        self.eat(")", True)
 
     # compiles a term.
     def compile_term(self):
         pass
 
+    # compiles a massively simplified version of compile_term
+    def compile_simple_term(self):
+        if self.tokenizer.current_token == "this":
+            self.eat("this", False)
+
+        else:
+            self.compile_identifier()
+
     # compiles a comma-separated list of expressions. can be empty.
     def compile_expression_list(self):
         pass
+
+    # compiles an identifier
+    def compile_identifier(self):
+        self.tokenizer.advance()
+
+        assert self.tokenizer.token_type() == TokenType.IDENTIFIER
+
+        self.output.write(f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
     # asserts that the next token is its first argument. its second argument, a
     # boolean, determines whether to advance. We can sometimes not advance when
@@ -212,14 +229,18 @@ class CompilationEngine:
         # advance the current character if second argument is true.
         if advance:
             self.tokenizer.advance()
-            print(self.tokenizer.current_token)
+            print("token: " + self.tokenizer.current_token)
             print("advanced!")
 
         # get the token type of the tokenizer.
         token_type = self.tokenizer.token_type()
 
+        # if the token is the start of a line or a delimiter, advance again,
+        #
         if token_type == "delimiter" or token_type == "Not a token.":
             self.tokenizer.advance()
+            token_type = self.tokenizer.token_type()
+            print("token: " + self.tokenizer.current_token)
 
         # there are several value that token_type can take on. I used match-case
         # statements here. Depending on the value that token_type takes on, I'll
@@ -234,6 +255,7 @@ class CompilationEngine:
                     f"<integerConstant> {self.tokenizer.int_val()} </integerConstant>\n")
 
             case TokenType.SYMBOL:
+                print("symbol: " + self.tokenizer.symbol())
                 self.output.write(f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
 
             case TokenType.KEYWORD:
