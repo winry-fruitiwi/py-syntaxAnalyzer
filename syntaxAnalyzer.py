@@ -20,10 +20,10 @@ file_root = ""
 compilation_engine = CompilationEngine(file_root + "test.jack")
 
 
-def main_loop(ce):
+def mainLoop(ce):
     # # while there are still more tokens, print out the tokenizer's current character
     # # and advance the current letter.
-    while ce.tokenizer.has_more_tokens():
+    while ce.tokenizer.hasMoreTokens():
         # get the current token of the tokenizer.
         current_token = ce.tokenizer.current_token
 
@@ -32,14 +32,14 @@ def main_loop(ce):
         match current_token:
             case "while":
                 print(current_token)
-                ce.compile_while_statement()
+                ce.compileWhileStatement()
                 continue
 
         # advance the current character.
         ce.tokenizer.advance()
 
         # get the token type of the tokenizer.
-        token_type = ce.tokenizer.token_type()
+        token_type = ce.tokenizer.tokenType()
 
         # there are several value that token_type can take on. I used match-case
         # statements here. Depending on the value that token_type takes on, I'll
@@ -47,11 +47,11 @@ def main_loop(ce):
         match token_type:
             case TokenType.STRING_CONST:
                 XML.write(
-                    f"<stringConstant> {ce.tokenizer.string_val()} </stringConstant>\n")
+                    f"<stringConstant> {ce.tokenizer.stringVal()} </stringConstant>\n")
 
             case TokenType.INT_CONST:
                 XML.write(
-                    f"<integerConstant> {ce.tokenizer.int_val()} </integerConstant>\n")
+                    f"<integerConstant> {ce.tokenizer.intVal()} </integerConstant>\n")
 
             case TokenType.SYMBOL:
                 XML.write(
@@ -59,7 +59,7 @@ def main_loop(ce):
 
             case TokenType.KEYWORD:
                 XML.write(
-                    f"<keyword> {ce.tokenizer.key_word()} </keyword>\n")
+                    f"<keyword> {ce.tokenizer.keyword()} </keyword>\n")
 
             case TokenType.IDENTIFIER:
                 XML.write(
@@ -73,4 +73,4 @@ XML.write("\n")
 XML.close()
 
 
-compilation_engine.test_compile()
+compilation_engine.testCompile()

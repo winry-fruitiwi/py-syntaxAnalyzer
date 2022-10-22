@@ -8,23 +8,23 @@ class CompilationEngine:
 
     # compiles a complete class. This needs to be called immediately after
     # an instance is initialized.
-    def compile_class(self):
+    def compileClass(self):
         pass
 
     # compiles a static variable or a field declaration.
-    def compile_class_var_dec(self):
+    def compileClassVarDec(self):
         pass
 
     # compiles a complete method, function, or constructor.
-    def compile_subroutine_dec(self):
+    def compileSubroutineDec(self):
         pass
 
     # compilers a parameter list. doesn't handle enclosing parentheses.
-    def compile_parameter_list(self):
+    def compileParameterList(self):
         pass
 
     # compiles a variable declaration. grammar: var type varName(,varName)*;
-    def compile_var_dec(self):
+    def compileVarDec(self):
         """
         <varDec>
             <keyword> var </keyword>
@@ -43,20 +43,20 @@ class CompilationEngine:
     #      functions I will use here will not include expressions, as those are
     #      extremely difficult. That means I won't be able to test my functions
     #      for a while.
-    def compile_statements(self):
+    def compileStatements(self):
         pass
 
     # compiles a sequence of statements inside curly brackets
-    def compile_statements_in_brackets(self):
+    def compileStatementsInBrackets(self):
         self.eat("{", True)
-        self.compile_statements()
+        self.compileStatements()
         self.eat("}", True)
 
     # helper functions!
 
     # compiles a single statement. A helper function for compile_statements.
     # grammar: letStatement|ifStatement|whileStatement|doStatement|returnStatement
-    def compile_statement(self):
+    def compileStatement(self):
         """
 
         :return:
@@ -64,7 +64,7 @@ class CompilationEngine:
         pass
 
     # compiles a let statement. grammar: let varName([expression])?=expression;
-    def compile_let_statement(self):
+    def compileLetStatement(self):
         """
         <letStatement>
           <keyword> let </keyword>
@@ -84,7 +84,7 @@ class CompilationEngine:
 
     # compiles an if statement. grammar: if (expression){statement} (else
     # {statements})?
-    def compile_if_statement(self):
+    def compileIfStatement(self):
         """
         <ifStatement>
           <keyword> if </keyword>
@@ -114,23 +114,23 @@ class CompilationEngine:
         self.eat("if", True)
 
         # eat expression in parens
-        self.compile_expr_in_parens()
+        self.compileExprInParens()
 
         # eat statement in brackets
-        self.compile_statements_in_brackets()
+        self.compileStatementsInBrackets()
 
         # advance the tokenizer, then check if the current token is else. if
         # it is, then eat else and {statements}.
         self.advance()
         if self.tokenizer.current_token == "else":
             self.eat("else", False)
-            self.compile_statements_in_brackets()
+            self.compileStatementsInBrackets()
 
         # write ending tag to output
         self.output.write("</ifStatement>")
 
     # compiles a while statement. grammar: while (expression) {statements}
-    def compile_while_statement(self):
+    def compileWhileStatement(self):
         """
         <whileStatement>
           <keyword> while </keyword>
@@ -174,10 +174,10 @@ class CompilationEngine:
         self.eat("while", False)
 
         # compile (expression)
-        self.compile_expr_in_parens()
+        self.compileExprInParens()
 
         # compile {statements}
-        self.compile_statements_in_brackets()
+        self.compileStatementsInBrackets()
 
         # write closing tag
         self.output.write("</whileStatement>\n")
@@ -185,7 +185,7 @@ class CompilationEngine:
         pass
 
     # compiles a do statement. grammar: do subRoutineCall;
-    def compile_do_statement(self):
+    def compileDoStatement(self):
         """
         <doStatement>
           <keyword> do </keyword>
@@ -203,43 +203,43 @@ class CompilationEngine:
         pass
 
     # compiles a return statement. grammar: return expression?;
-    def compile_return_statement(self):
+    def compileReturnStatement(self):
         # eat return
 
         pass
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
     # for now call compile_simple_term here
-    def compile_expression(self):
-        self.compile_simple_term()
+    def compileExpression(self):
+        self.compileSimpleTerm()
 
     # compiles an expression within parentheses.
-    def compile_expr_in_parens(self):
+    def compileExprInParens(self):
         self.eat("(", True)
-        self.compile_expression()
+        self.compileExpression()
         self.eat(")", True)
 
     # compiles a term.
-    def compile_term(self):
+    def compileTerm(self):
         pass
 
     # compiles a massively simplified version of compile_term
-    def compile_simple_term(self):
+    def compileSimpleTerm(self):
         if self.tokenizer.current_token == "this":
             self.eat("this", False)
 
         else:
-            self.compile_identifier()
+            self.compileIdentifier()
 
     # compiles a comma-separated list of expressions. can be empty.
-    def compile_expression_list(self):
+    def compileExpressionList(self):
         pass
 
     # compiles an identifier
-    def compile_identifier(self):
+    def compileIdentifier(self):
         self.tokenizer.advance()
 
-        assert self.tokenizer.token_type() == TokenType.IDENTIFIER
+        assert self.tokenizer.tokenType() == TokenType.IDENTIFIER
 
         self.output.write(f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
@@ -249,7 +249,7 @@ class CompilationEngine:
         self.tokenizer.advance()
 
         # get the token type of the tokenizer.
-        token_type = self.tokenizer.token_type()
+        token_type = self.tokenizer.tokenType()
 
         # if the token is the start of a line or a delimiter, advance again,
         # setting the token type again as well
@@ -257,7 +257,7 @@ class CompilationEngine:
             self.tokenizer.advance(
 
             )
-            token_type = self.tokenizer.token_type()
+            token_type = self.tokenizer.tokenType()
 
     # asserts that the next token is its first argument. its second argument, a
     # boolean, determines whether to advance. We can sometimes not advance when
@@ -269,7 +269,7 @@ class CompilationEngine:
             print("token: " + self.tokenizer.current_token)
             print("advanced!")
 
-        token_type = self.tokenizer.token_type()
+        token_type = self.tokenizer.tokenType()
 
         # there are several value that token_type can take on. I used match-case
         # statements here. Depending on the value that token_type takes on, I'll
@@ -277,18 +277,18 @@ class CompilationEngine:
         match token_type:
             case TokenType.STRING_CONST:
                 self.output.write(
-                    f"<stringConstant> {self.tokenizer.string_val()} </stringConstant>\n")
+                    f"<stringConstant> {self.tokenizer.stringVal()} </stringConstant>\n")
 
             case TokenType.INT_CONST:
                 self.output.write(
-                    f"<integerConstant> {self.tokenizer.int_val()} </integerConstant>\n")
+                    f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
 
             case TokenType.SYMBOL:
                 print("symbol: " + self.tokenizer.symbol())
                 self.output.write(f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
 
             case TokenType.KEYWORD:
-                self.output.write(f"<keyword> {self.tokenizer.key_word()} </keyword>\n")
+                self.output.write(f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
 
             case TokenType.IDENTIFIER:
                 self.output.write(
@@ -299,5 +299,5 @@ class CompilationEngine:
         assert token == current_token
 
     # a simple function that tests a single compile statement.
-    def test_compile(self):
-        self.compile_if_statement()
+    def testCompile(self):
+        self.compileIfStatement()

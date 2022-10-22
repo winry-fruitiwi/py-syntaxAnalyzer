@@ -192,7 +192,7 @@ class JackTokenizer:
         self.current_char = None
 
     # detects if the tokenizer has more tokens
-    def has_more_tokens(self):
+    def hasMoreTokens(self):
         # return if the current character index is the same as
         # the maximum character index for this line. then do the same for the
         # line index. after finding the result, reverse it.
@@ -255,7 +255,7 @@ class JackTokenizer:
 
                 # if we find a delimiter, make the current token a substring of the
                 # current line from the current character index to char_index
-                if self.is_delimiter(char) or char_index == len(curr_line) - 1:
+                if self.isDelimiter(char) or char_index == len(curr_line) - 1:
                     self.current_token = curr_line[
                                          self.current_char_index:char_index]
 
@@ -269,9 +269,9 @@ class JackTokenizer:
         for char_index in range(
                 len(self.stripped_lines[self.current_line_index])):
             char = self.stripped_lines[self.current_line_index][char_index]
-            if self.is_delimiter(char):
+            if self.isDelimiter(char):
                 delimiter_list.append(char_index)
-                if self.is_symbol(char):
+                if self.isSymbol(char):
                     delimiter_list.append(char_index + 1)
 
         # a list of all the slices I can make out of my delimiter list
@@ -293,7 +293,7 @@ class JackTokenizer:
         self.current_char = curr_line[self.current_char_index]
 
     # checks the type of the current token
-    def token_type(self):
+    def tokenType(self):
         # if we haven't initialized the current token or it's the start of the
         # line, do nothing.
         if self.current_token == "":
@@ -330,7 +330,7 @@ class JackTokenizer:
             return TokenType.IDENTIFIER
 
     # returns current token if it's a keyword
-    def key_word(self):
+    def keyword(self):
         return self.current_token
 
     # returns current token if it's a symbol
@@ -351,20 +351,20 @@ class JackTokenizer:
         return self.current_token
 
     # returns current token if it's a integer constant
-    def int_val(self):
+    def intVal(self):
         return self.current_token
 
     # returns current token if it's a string constant. Does not handle quotes.
-    def string_val(self):
+    def stringVal(self):
         return self.current_token.strip('"')
 
     # returns if current character is a symbol.
-    def is_symbol(self, char):
+    def isSymbol(self, char):
         return char in self.symbols
 
     # returns if current character is a symbol, whitespace, or newline.
-    def is_delimiter(self, char):
-        return (self.is_symbol(char) or
+    def isDelimiter(self, char):
+        return (self.isSymbol(char) or
                 char == "\n" or
                 char == " "
                 )
