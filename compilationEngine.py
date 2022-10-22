@@ -6,6 +6,9 @@ class CompilationEngine:
         self.tokenizer = JackTokenizer(path)
         self.output = open("test.xml", "w")
 
+        # signals to eat() if we need to skip advance()
+        self.skip_advance = False
+
     # compiles a complete class. This needs to be called immediately after
     # an instance is initialized.
     def compileClass(self):
@@ -48,9 +51,9 @@ class CompilationEngine:
 
     # compiles a sequence of statements inside curly brackets
     def compileStatementsInBrackets(self):
-        self.eat("{", True)
+        self.eat("{")
         self.compileStatements()
-        self.eat("}", True)
+        self.eat("}")
 
     # helper functions!
 
@@ -111,7 +114,7 @@ class CompilationEngine:
 
         # write opening tag, eat if
         self.output.write("<ifStatement>\n")
-        self.eat("if", True)
+        self.eat("if")
 
         # eat expression in parens
         self.compileExprInParens()
@@ -122,8 +125,9 @@ class CompilationEngine:
         # advance the tokenizer, then check if the current token is else. if
         # it is, then eat else and {statements}.
         self.advance()
+        self.skip_advance = True
         if self.tokenizer.current_token == "else":
-            self.eat("else", False)
+            self.eat("else")
             self.compileStatementsInBrackets()
 
         # write ending tag to output
@@ -171,7 +175,7 @@ class CompilationEngine:
         """
         # while + write to output
         self.output.write("<whileStatement>\n")
-        self.eat("while", False)
+        self.eat("while")
 
         # compile (expression)
         self.compileExprInParens()
@@ -215,9 +219,9 @@ class CompilationEngine:
 
     # compiles an expression within parentheses.
     def compileExprInParens(self):
-        self.eat("(", True)
+        self.eat("(")
         self.compileExpression()
-        self.eat(")", True)
+        self.eat(")")
 
     # compiles a term.
     def compileTerm(self):
@@ -226,7 +230,7 @@ class CompilationEngine:
     # compiles a massively simplified version of compile_term
     def compileSimpleTerm(self):
         if self.tokenizer.current_token == "this":
-            self.eat("this", False)
+            self.eat("this")
 
         else:
             self.compileIdentifier()
@@ -262,12 +266,14 @@ class CompilationEngine:
     # asserts that the next token is its first argument. its second argument, a
     # boolean, determines whether to advance. We can sometimes not advance when
     # dealing with expressions.
-    def eat(self, token, advance):
+    def eat(self, token):
         # advance the current character if second argument is true.
-        if advance:
+        if not self.skip_advance:
             self.advance()
             print("token: " + self.tokenizer.current_token)
             print("advanced!")
+        else:
+            self.skip_advance = False
 
         token_type = self.tokenizer.tokenType()
 
