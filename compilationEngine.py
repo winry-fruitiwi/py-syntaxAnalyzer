@@ -119,20 +119,15 @@ class CompilationEngine:
         # eat statement in brackets
         self.compile_statements_in_brackets()
 
-        # use try-except and eat else
-        try:
-            self.eat("else", True)
-            # if this goes through successfully, eat statements in brackets
+        # advance the tokenizer, then check if the current token is else. if
+        # it is, then eat else and {statements}.
+        self.advance()
+        if self.tokenizer.current_token == "else":
+            self.eat("else", False)
             self.compile_statements_in_brackets()
-        except AssertionError:
-            pass
 
         # write ending tag to output
         self.output.write("</ifStatement>")
-
-        # alternatively, I can let eat() return false if eating didn't go as
-        # planned so that I don't need a try-except block, which may not be
-        # as efficient.
 
     # compiles a while statement. grammar: while (expression) {statements}
     def compile_while_statement(self):
@@ -209,6 +204,8 @@ class CompilationEngine:
 
     # compiles a return statement. grammar: return expression?;
     def compile_return_statement(self):
+        # eat return
+
         pass
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
@@ -257,9 +254,10 @@ class CompilationEngine:
         # if the token is the start of a line or a delimiter, advance again,
         # setting the token type again as well
         while token_type == "delimiter" or token_type == "Not a token.":
-            self.tokenizer.advance()
+            self.tokenizer.advance(
+
+            )
             token_type = self.tokenizer.token_type()
-            print("token: " + self.tokenizer.current_token)
 
     # asserts that the next token is its first argument. its second argument, a
     # boolean, determines whether to advance. We can sometimes not advance when
