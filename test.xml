@@ -1,4 +1,6 @@
 <returnStatement>
-<keyword> return </keyword>
+<keyword> let </keyword>
+<identifier> game </identifier>
+<symbol> = </symbol>
+<keyword> this </keyword>
 <symbol> ; </symbol>
-</returnStatement>

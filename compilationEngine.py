@@ -83,19 +83,32 @@ class CompilationEngine:
 
         :return:
         """
+        # add opening tag
+        self.output.write("<returnStatement>\n")
 
         # eat let
+        self.eat("let")
 
         # compile an identifier
+        self.compileIdentifier()
 
         # advance and check for a bracket. If there is one, eat [, compile
         # expression, and then eat ]. If not, continue.
+        self.advance()
+        self.skip_advance = True
+        if self.tokenizer.current_token == "[":
+            self.eat("[")
+            self.compileExpression()
+            self.eat("]")
 
         # eat =
+        self.eat("=")
 
         # compile expression
+        self.compileExpression()
 
         # eat ;
+        self.eat(";")
 
     # compiles an if statement. grammar: if (expression){statement} (else
     # {statements})?
@@ -231,7 +244,7 @@ class CompilationEngine:
         # if the current token is "this" or type identifier, compile a term
         if (self.tokenizer.current_token == "this" or
                 self.tokenizer.tokenType() == TokenType.IDENTIFIER):
-            self.compileSimpleTerm()
+            self.compileExpression()
 
         # no matter what happened previously, eat ";"
         print(self.tokenizer.current_token)
@@ -257,6 +270,9 @@ class CompilationEngine:
 
     # compiles a massively simplified version of compile_term
     def compileSimpleTerm(self):
+        self.advance()
+        self.skip_advance = True
+        print("simpleTerm token: " + self.tokenizer.current_token)
         if self.tokenizer.current_token == "this":
             self.eat("this")
 
@@ -337,4 +353,4 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileReturnStatement()
+        self.compileLetStatement()
