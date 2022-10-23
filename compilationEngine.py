@@ -210,6 +210,12 @@ class CompilationEngine:
     def compileReturnStatement(self):
         # eat return
 
+        # advance, set skip_advance to true
+
+        # if the current token is "this" or type identifier, compile a term
+
+        # no matter what happened previously, eat ";"
+
         pass
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
