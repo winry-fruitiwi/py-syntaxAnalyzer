@@ -83,7 +83,19 @@ class CompilationEngine:
 
         :return:
         """
-        pass
+
+        # eat let
+
+        # compile an identifier
+
+        # advance and check for a bracket. If there is one, eat [, compile
+        # expression, and then eat ]. If not, continue.
+
+        # eat =
+
+        # compile expression
+
+        # eat ;
 
     # compiles an if statement. grammar: if (expression){statement} (else
     # {statements})?
