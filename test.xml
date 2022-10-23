@@ -1,11 +1,4 @@
-<ifStatement>
-<keyword> if </keyword>
-<symbol> ( </symbol>
-<identifier> hello </identifier>
-<symbol> ) </symbol>
-<symbol> { </symbol>
-<symbol> } </symbol>
-<keyword> else </keyword>
-<symbol> { </symbol>
-<symbol> } </symbol>
-</ifStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>

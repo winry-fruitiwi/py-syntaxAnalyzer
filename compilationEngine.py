@@ -209,14 +209,24 @@ class CompilationEngine:
     # compiles a return statement. grammar: return expression?;
     def compileReturnStatement(self):
         # eat return
+        self.output.write("<returnStatement>\n")
+        self.eat("return")
 
         # advance, set skip_advance to true
+        self.advance()
+        self.skip_advance = True
 
         # if the current token is "this" or type identifier, compile a term
+        if (self.tokenizer.current_token == "this" or
+                self.tokenizer.tokenType() == TokenType.IDENTIFIER):
+            self.compileSimpleTerm()
 
         # no matter what happened previously, eat ";"
+        print(self.tokenizer.current_token)
+        self.eat(";")
 
-        pass
+        # write output tag
+        self.output.write("</returnStatement>")
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
     # for now call compile_simple_term here
@@ -247,7 +257,10 @@ class CompilationEngine:
 
     # compiles an identifier
     def compileIdentifier(self):
-        self.tokenizer.advance()
+        if not self.skip_advance:
+            self.advance()
+        else:
+            self.skip_advance = False
 
         assert self.tokenizer.tokenType() == TokenType.IDENTIFIER
 
@@ -312,4 +325,4 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileIfStatement()
+        self.compileReturnStatement()
