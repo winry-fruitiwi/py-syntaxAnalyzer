@@ -270,8 +270,9 @@ class CompilationEngine:
 
     # compiles a massively simplified version of compile_term
     def compileSimpleTerm(self):
-        self.advance()
-        self.skip_advance = True
+        if not self.skip_advance:
+            self.advance()
+            self.skip_advance = True
         print("simpleTerm token: " + self.tokenizer.current_token)
         if self.tokenizer.current_token == "this":
             self.eat("this")
@@ -353,4 +354,4 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileLetStatement()
+        self.compileWhileStatement()
