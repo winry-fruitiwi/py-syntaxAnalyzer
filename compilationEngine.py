@@ -47,6 +47,12 @@ class CompilationEngine:
     #      extremely difficult. That means I won't be able to test my functions
     #      for a while.
     def compileStatements(self):
+        # advance
+
+        # while the current token is do, while, if, let, or return, call
+        # compileStatement
+
+        # at the end of each iteration, advance
         pass
 
     # compiles a sequence of statements inside curly brackets
@@ -62,9 +68,6 @@ class CompilationEngine:
     def compileStatement(self):
         # match-case for do, while, return, let, and if statements
         # for each case, compile the respective statement.
-        self.advance()
-        self.skip_advance = True
-
         print(self.tokenizer.current_token)
         match self.tokenizer.current_token:
             case "do":

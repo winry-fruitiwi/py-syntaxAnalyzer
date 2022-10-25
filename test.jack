@@ -1,6 +1,16 @@
 if (hello) {
 
-}
-else {
+} else {
 
 }
+
+while (hello) {
+
+}
+
+let hello = beep;
+let hello[expr] = beep;
+
+do hello(beep);
+
+return hello;
