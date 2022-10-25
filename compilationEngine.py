@@ -230,10 +230,17 @@ class CompilationEngine:
         """
 
         # eat do
+        self.output.write("<doStatement>\n")
+        self.eat("do")
 
         # compile subRoutineCall
+        self.compileSubRoutineCall()
 
         # eat ;
+        self.eat(";")
+
+        # ending tag
+        self.output.write("</doStatement>")
 
         pass
 
@@ -360,16 +367,20 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileWhileStatement()
+        self.compileDoStatement()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
         # compile an identifier
+        self.compileIdentifier()
 
         # eat (
+        self.eat("(")
 
         # compile an expression
+        self.compileExpression()
 
         # eat )
+        self.eat(")")
 
         pass

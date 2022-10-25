@@ -1,8 +1,8 @@
-<whileStatement>
-<keyword> while </keyword>
+<doStatement>
+<keyword> do </keyword>
+<identifier> subRoutineCall </identifier>
 <symbol> ( </symbol>
-<identifier> hello </identifier>
+<identifier> count </identifier>
 <symbol> ) </symbol>
-<symbol> { </symbol>
-<symbol> } </symbol>
-</whileStatement>
+<symbol> ; </symbol>
+</doStatement>
