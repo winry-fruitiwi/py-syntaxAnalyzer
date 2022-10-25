@@ -1,8 +1,11 @@
-<doStatement>
-<keyword> do </keyword>
-<identifier> subRoutineCall </identifier>
+<ifStatement>
+<keyword> if </keyword>
 <symbol> ( </symbol>
-<identifier> count </identifier>
+<identifier> hello </identifier>
 <symbol> ) </symbol>
-<symbol> ; </symbol>
-</doStatement>
+<symbol> { </symbol>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<symbol> } </symbol>
+</ifStatement>

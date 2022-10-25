@@ -60,11 +60,23 @@ class CompilationEngine:
     # compiles a single statement. A helper function for compile_statements.
     # grammar: letStatement|ifStatement|whileStatement|doStatement|returnStatement
     def compileStatement(self):
-        """
+        # match-case for do, while, return, let, and if statements
+        # for each case, compile the respective statement.
+        self.advance()
+        self.skip_advance = True
 
-        :return:
-        """
-        pass
+        print(self.tokenizer.current_token)
+        match self.tokenizer.current_token:
+            case "do":
+                self.compileDoStatement()
+            case "if":
+                self.compileIfStatement()
+            case "while":
+                self.compileWhileStatement()
+            case "let":
+                self.compileLetStatement()
+            case "return":
+                self.compileReturnStatement()
 
     # compiles a let statement. grammar: let varName([expression])?=expression;
     def compileLetStatement(self):
@@ -367,7 +379,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileDoStatement()
+        self.compileStatement()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
