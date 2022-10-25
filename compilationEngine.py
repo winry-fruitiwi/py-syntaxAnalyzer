@@ -229,6 +229,12 @@ class CompilationEngine:
         :return:
         """
 
+        # eat do
+
+        # compile subRoutineCall
+
+        # eat ;
+
         pass
 
     # compiles a return statement. grammar: return expression?;
@@ -355,3 +361,15 @@ class CompilationEngine:
     # a simple function that tests a single compile statement.
     def testCompile(self):
         self.compileWhileStatement()
+
+    # an unneeded subroutine call method for use in terms and do statements.
+    def compileSubRoutineCall(self):
+        # compile an identifier
+
+        # eat (
+
+        # compile an expression
+
+        # eat )
+
+        pass
