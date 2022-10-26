@@ -11,18 +11,18 @@ Files I've tested with the current version of code:
 from compilationEngine import *
 from TokenType import *
 
-XML = open("test.xml", "w")
-XML.write("<tokens>\n")
-
 # the root of all files I'll need to test here.
 file_root = ""
 
-compilation_engine = CompilationEngine(file_root + "test.jack")
+compilationEngine = CompilationEngine(file_root + "test.jack")
 
 
 def mainLoop(ce):
-    # # while there are still more tokens, print out the tokenizer's current character
-    # # and advance the current letter.
+    outputXML = open("test.xml", "w")
+    outputXML.write("<tokens>\n")
+
+    # while there are still more tokens, print out the tokenizer's current character
+    # and advance the current letter.
     while ce.tokenizer.hasMoreTokens():
         # get the current token of the tokenizer.
         current_token = ce.tokenizer.current_token
@@ -46,31 +46,30 @@ def mainLoop(ce):
         # add a tag describing it appropriately.
         match token_type:
             case TokenType.STRING_CONST:
-                XML.write(
+                outputXML.write(
                     f"<stringConstant> {ce.tokenizer.stringVal()} </stringConstant>\n")
 
             case TokenType.INT_CONST:
-                XML.write(
+                outputXML.write(
                     f"<integerConstant> {ce.tokenizer.intVal()} </integerConstant>\n")
 
             case TokenType.SYMBOL:
-                XML.write(
+                outputXML.write(
                     f"<symbol> {ce.tokenizer.symbol()} </symbol>\n")
 
             case TokenType.KEYWORD:
-                XML.write(
+                outputXML.write(
                     f"<keyword> {ce.tokenizer.keyword()} </keyword>\n")
 
             case TokenType.IDENTIFIER:
-                XML.write(
+                outputXML.write(
                     f"<identifier> {ce.tokenizer.identifier()} </identifier>\n")
 
         print("\n")
 
-
-XML.write("</tokens>")
-XML.write("\n")
-XML.close()
+    outputXML.write("</tokens>")
 
 
-compilation_engine.testCompile()
+compilationEngine.output.write("<tokens>\n")
+compilationEngine.testCompile()
+compilationEngine.output.write("</tokens>")

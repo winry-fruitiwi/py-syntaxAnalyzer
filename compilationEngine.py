@@ -48,9 +48,17 @@ class CompilationEngine:
     #      for a while.
     def compileStatements(self):
         # advance
+        self.advance()
+        self.skip_advance = True
 
         # while the current token is do, while, if, let, or return, call
         # compileStatement
+        while self.tokenizer.current_token in ["while", "do", "if", "let", "return"]:
+            self.compileStatement()
+
+            self.advance()
+            self.skip_advance = True
+            print("\n\nstatement done!\n\n")
 
         # at the end of each iteration, advance
         pass
@@ -99,7 +107,7 @@ class CompilationEngine:
         :return:
         """
         # add opening tag
-        self.output.write("<returnStatement>\n")
+        self.output.write("<letStatement>\n")
 
         # eat let
         self.eat("let")
@@ -124,6 +132,8 @@ class CompilationEngine:
 
         # eat ;
         self.eat(";")
+
+        self.output.write("</letStatement>\n")
 
     # compiles an if statement. grammar: if (expression){statement} (else
     # {statements})?
@@ -171,7 +181,7 @@ class CompilationEngine:
             self.compileStatementsInBrackets()
 
         # write ending tag to output
-        self.output.write("</ifStatement>")
+        self.output.write("</ifStatement>\n")
 
     # compiles a while statement. grammar: while (expression) {statements}
     def compileWhileStatement(self):
@@ -255,7 +265,7 @@ class CompilationEngine:
         self.eat(";")
 
         # ending tag
-        self.output.write("</doStatement>")
+        self.output.write("</doStatement>\n")
 
         pass
 
@@ -279,7 +289,7 @@ class CompilationEngine:
         self.eat(";")
 
         # write output tag
-        self.output.write("</returnStatement>")
+        self.output.write("</returnStatement>\n")
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
     # for now call compile_simple_term here
@@ -382,7 +392,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileStatement()
+        self.compileStatements()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
