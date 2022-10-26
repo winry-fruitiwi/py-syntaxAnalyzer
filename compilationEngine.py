@@ -12,6 +12,21 @@ class CompilationEngine:
     # compiles a complete class. This needs to be called immediately after
     # an instance is initialized.
     def compileClass(self):
+        # eat class
+        self.eat("class")
+
+        # compile an identifier
+        self.compileIdentifier()
+
+        # eat {
+        self.eat("{")
+
+        # compile statements. TODO change this to classVarDec and subRoutineDec
+        self.compileStatements()
+
+        # eat }
+        self.eat("}")
+
         pass
 
     # compiles a static variable or a field declaration.
@@ -76,7 +91,7 @@ class CompilationEngine:
     def compileStatement(self):
         # match-case for do, while, return, let, and if statements
         # for each case, compile the respective statement.
-        print(self.tokenizer.current_token)
+
         match self.tokenizer.current_token:
             case "do":
                 self.compileDoStatement()
@@ -285,7 +300,6 @@ class CompilationEngine:
             self.compileExpression()
 
         # no matter what happened previously, eat ";"
-        print(self.tokenizer.current_token)
         self.eat(";")
 
         # write output tag
@@ -311,7 +325,6 @@ class CompilationEngine:
         if not self.skip_advance:
             self.advance()
             self.skip_advance = True
-        print("simpleTerm token: " + self.tokenizer.current_token)
         if self.tokenizer.current_token == "this":
             self.eat("this")
 
@@ -404,7 +417,6 @@ class CompilationEngine:
                     f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
 
             case TokenType.SYMBOL:
-                print("symbol: " + self.tokenizer.symbol())
                 self.output.write(f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
 
             case TokenType.KEYWORD:
@@ -414,13 +426,12 @@ class CompilationEngine:
                 self.output.write(
                     f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
-        print(self.tokenizer.current_token)
         current_token = self.tokenizer.current_token
         assert token == current_token
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileStatements()
+        self.compileClass()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):

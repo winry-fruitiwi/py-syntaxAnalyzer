@@ -1,58 +1,6 @@
 <tokens>
-<ifStatement>
-<keyword> if </keyword>
-<symbol> ( </symbol>
-<identifier> hello </identifier>
-<symbol> ) </symbol>
-<symbol> { </symbol>
-<letStatement>
-<keyword> let </keyword>
-<identifier> hello </identifier>
-<symbol> = </symbol>
-<identifier> beep </identifier>
-<symbol> ; </symbol>
-</letStatement>
-<symbol> } </symbol>
-<keyword> else </keyword>
+<keyword> class </keyword>
+<identifier> Foo </identifier>
 <symbol> { </symbol>
 <symbol> } </symbol>
-</ifStatement>
-<whileStatement>
-<keyword> while </keyword>
-<symbol> ( </symbol>
-<identifier> hello </identifier>
-<symbol> ) </symbol>
-<symbol> { </symbol>
-<symbol> } </symbol>
-</whileStatement>
-<letStatement>
-<keyword> let </keyword>
-<identifier> hello </identifier>
-<symbol> = </symbol>
-<identifier> beep </identifier>
-<symbol> ; </symbol>
-</letStatement>
-<letStatement>
-<keyword> let </keyword>
-<identifier> hello </identifier>
-<symbol> [ </symbol>
-<identifier> expr </identifier>
-<symbol> ] </symbol>
-<symbol> = </symbol>
-<identifier> beep </identifier>
-<symbol> ; </symbol>
-</letStatement>
-<doStatement>
-<keyword> do </keyword>
-<identifier> hello </identifier>
-<symbol> ( </symbol>
-<identifier> beep </identifier>
-<symbol> ) </symbol>
-<symbol> ; </symbol>
-</doStatement>
-<returnStatement>
-<keyword> return </keyword>
-<identifier> hello </identifier>
-<symbol> ; </symbol>
-</returnStatement>
 </tokens>

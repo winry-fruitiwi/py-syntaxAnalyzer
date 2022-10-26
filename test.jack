@@ -1,16 +1,3 @@
-if (hello) {
-    let hello = beep;
-} else {
+class Foo{
 
 }
-
-while (hello) {
-
-}
-
-let hello = beep;
-let hello[expr] = beep;
-
-do hello(beep);
-
-return hello;
