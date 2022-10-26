@@ -333,6 +333,36 @@ class CompilationEngine:
 
         self.output.write(f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
+    def compileStrConst(self):
+        if not self.skip_advance:
+            self.advance()
+        else:
+            self.skip_advance = False
+
+        assert self.tokenizer.tokenType() == TokenType.STRING_CONST
+
+        self.output.write(f"<stringConstant> {self.tokenizer.stringVal()} </stringConstant>\n")
+
+    def compileIntConst(self):
+        if not self.skip_advance:
+            self.advance()
+        else:
+            self.skip_advance = False
+
+        assert self.tokenizer.tokenType() == TokenType.STRING_CONST
+
+        self.output.write(f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
+
+    def compileKeyword(self):
+        if not self.skip_advance:
+            self.advance()
+        else:
+            self.skip_advance = False
+
+        assert self.tokenizer.tokenType() == TokenType.KEYWORD
+
+        self.output.write(f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
+
     # advances the tokenizer and checks if it's a delimiter or not a token.
     def advance(self):
         # advance the tokenizer.
@@ -356,8 +386,6 @@ class CompilationEngine:
         # advance the current character if second argument is true.
         if not self.skip_advance:
             self.advance()
-            print("token: " + self.tokenizer.current_token)
-            print("advanced!")
         else:
             self.skip_advance = False
 

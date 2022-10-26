@@ -235,8 +235,6 @@ class JackTokenizer:
             self.current_token = curr_line[self.current_char_index:next_quote_index + 1]
 
             self.current_char_index = next_quote_index + 1
-
-            print(self.current_token)
         else:
             # for each character in the current line, starting from the current
             # character index, check if the character at curr_line[char_index]
@@ -262,33 +260,7 @@ class JackTokenizer:
                     self.current_char_index = char_index
                     break
 
-        # a list of all the delimiters I have encountered
-        delimiter_list = [0]
 
-        # appends the index of every delimiter found to delimiter_list
-        for char_index in range(
-                len(self.stripped_lines[self.current_line_index])):
-            char = self.stripped_lines[self.current_line_index][char_index]
-            if self.isDelimiter(char):
-                delimiter_list.append(char_index)
-                if self.isSymbol(char):
-                    delimiter_list.append(char_index + 1)
-
-        # a list of all the slices I can make out of my delimiter list
-        slice_list = []
-
-        # print a list of slices of the current line's tokens
-        for index in range(len(delimiter_list) - 1):
-            next_index = index + 1
-
-            curr_slice = curr_line[
-                         delimiter_list[index]:delimiter_list[next_index]]
-            stripped_slice = curr_slice.strip(" ").strip("\n").strip(" ")
-
-            if stripped_slice != "":
-                slice_list.append(stripped_slice)
-
-        print(slice_list)
 
         self.current_char = curr_line[self.current_char_index]
 
