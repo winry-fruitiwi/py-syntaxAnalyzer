@@ -1,6 +1,11 @@
 <tokens>
-<keyword> class </keyword>
-<identifier> Foo </identifier>
-<symbol> { </symbol>
-<symbol> } </symbol>
+<keyword> static </keyword>
+<identifier> beep </identifier>
+<identifier> d6 </identifier>
+<symbol> , </symbol>
+<identifier> d6 </identifier>
+<symbol> , </symbol>
+<identifier> d6 </identifier>
+<symbol> , </symbol>
+<identifier> d6 </identifier>
 </tokens>

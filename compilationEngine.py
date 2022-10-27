@@ -27,10 +27,38 @@ class CompilationEngine:
         # eat }
         self.eat("}")
 
-        pass
-
     # compiles a static variable or a field declaration.
     def compileClassVarDec(self):
+        # eat either static or field
+        self.advance()
+        self.skip_advance = True
+
+        if self.tokenizer.current_token == "static":
+            self.eat("static")
+        else:
+            self.eat("field")
+
+        # compile a type
+        self.compileType()
+        print("hello")
+
+        # compile an identifier
+        self.compileIdentifier()
+        print("hello")
+
+        # advance
+        self.advance()
+        self.skip_advance = True
+
+        # while the next token is a comma, eat a comma and compile an identifier
+        while self.tokenizer.current_token == ",":
+            print("hello")
+            self.eat(",")
+            self.compileIdentifier()
+
+            self.advance()
+            self.skip_advance = True
+
         pass
 
     # compiles a complete method, function, or constructor.
@@ -85,6 +113,29 @@ class CompilationEngine:
         self.eat("}")
 
     # helper functions!
+
+    # compiles a type
+    def compileType(self):
+        # advance
+        self.advance()
+        self.skip_advance = True
+
+        # eat int, char, boolean, or an identifier
+        match self.tokenizer.current_token:
+            case "int":
+                self.eat("int")
+                return
+            case "char":
+                self.eat("char")
+                return
+            case "boolean":
+                self.eat("boolean")
+                return
+        if self.tokenizer.tokenType() == TokenType.IDENTIFIER:
+            self.compileIdentifier()
+
+
+        pass
 
     # compiles a single statement. A helper function for compile_statements.
     # grammar: letStatement|ifStatement|whileStatement|doStatement|returnStatement
@@ -333,6 +384,7 @@ class CompilationEngine:
 
     # compiles a comma-separated list of expressions. can be empty.
     def compileExpressionList(self):
+
         pass
 
     # compiles an identifier
@@ -431,7 +483,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileClass()
+        self.compileClassVarDec()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
