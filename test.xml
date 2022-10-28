@@ -1,7 +1,9 @@
 <tokens>
 <keyword> method </keyword>
-<keyword> boolean </keyword>
-<identifier> Hello </identifier>
+<keyword> int </keyword>
+<identifier> subRoutineName </identifier>
 <symbol> ( </symbol>
+<keyword> int </keyword>
+<identifier> eat </identifier>
 <symbol> ) </symbol>
 </tokens>

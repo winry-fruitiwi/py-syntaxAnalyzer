@@ -1,1 +1,1 @@
-method boolean Hello()
+method int subRoutineName(int eat)

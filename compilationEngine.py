@@ -107,11 +107,33 @@ class CompilationEngine:
         # for statements in brackets.
         self.compileSubRoutineBody()
 
-        pass
-
     # compilers a parameter list. doesn't handle enclosing parentheses.
     def compileParameterList(self):
-        pass
+        self.advance()
+        self.skip_advance = True
+        if (self.tokenizer.current_token in ["int", "char", "boolean"] or
+                self.tokenizer.tokenType() == TokenType.IDENTIFIER):
+            # compile type
+            self.compileType()
+
+            # compile identifier
+            self.compileIdentifier()
+
+            # advance
+            self.advance()
+            self.skip_advance = True
+
+            # while the token is a comma, eat it, compile type and identifier,
+            # then advance.
+            while self.tokenizer.current_token == ",":
+                self.eat(",")
+                self.advance()
+                self.skip_advance = True
+                self.compileType()
+                self.compileIdentifier()
+
+                self.advance()
+                self.skip_advance = True
 
     # compiles a variable declaration. grammar: var type varName(,varName)*;
     def compileVarDec(self):
@@ -136,7 +158,8 @@ class CompilationEngine:
 
         # while the current token is do, while, if, let, or return, call
         # compileStatement
-        while self.tokenizer.current_token in ["while", "do", "if", "let", "return"]:
+        while self.tokenizer.current_token in ["while", "do", "if", "let",
+                                               "return"]:
             self.compileStatement()
 
             self.advance()
@@ -157,7 +180,6 @@ class CompilationEngine:
     # compiles a type
     def compileType(self):
 
-
         # eat int, char, boolean, or an identifier
         match self.tokenizer.current_token:
             case "int":
@@ -171,7 +193,6 @@ class CompilationEngine:
                 return
         if self.tokenizer.tokenType() == TokenType.IDENTIFIER:
             self.compileIdentifier()
-
 
         pass
 
@@ -434,7 +455,8 @@ class CompilationEngine:
 
         assert self.tokenizer.tokenType() == TokenType.IDENTIFIER
 
-        self.output.write(f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
+        self.output.write(
+            f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
     def compileStrConst(self):
         if not self.skip_advance:
@@ -444,7 +466,8 @@ class CompilationEngine:
 
         assert self.tokenizer.tokenType() == TokenType.STRING_CONST
 
-        self.output.write(f"<stringConstant> {self.tokenizer.stringVal()} </stringConstant>\n")
+        self.output.write(
+            f"<stringConstant> {self.tokenizer.stringVal()} </stringConstant>\n")
 
     def compileIntConst(self):
         if not self.skip_advance:
@@ -454,7 +477,8 @@ class CompilationEngine:
 
         assert self.tokenizer.tokenType() == TokenType.STRING_CONST
 
-        self.output.write(f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
+        self.output.write(
+            f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
 
     def compileKeyword(self):
         if not self.skip_advance:
@@ -507,10 +531,12 @@ class CompilationEngine:
                     f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
 
             case TokenType.SYMBOL:
-                self.output.write(f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
+                self.output.write(
+                    f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
 
             case TokenType.KEYWORD:
-                self.output.write(f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
+                self.output.write(
+                    f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
 
             case TokenType.IDENTIFIER:
                 self.output.write(
