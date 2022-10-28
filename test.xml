@@ -1,11 +1,7 @@
 <tokens>
-<keyword> static </keyword>
-<identifier> beep </identifier>
-<identifier> d6 </identifier>
-<symbol> , </symbol>
-<identifier> d6 </identifier>
-<symbol> , </symbol>
-<identifier> d6 </identifier>
-<symbol> , </symbol>
-<identifier> d6 </identifier>
+<keyword> method </keyword>
+<keyword> boolean </keyword>
+<identifier> Hello </identifier>
+<symbol> ( </symbol>
+<symbol> ) </symbol>
 </tokens>

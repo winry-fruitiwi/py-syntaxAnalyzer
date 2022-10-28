@@ -1,1 +1,1 @@
-static beep d6, d6, d6, d6;
+method boolean Hello()

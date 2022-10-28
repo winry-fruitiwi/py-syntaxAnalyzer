@@ -38,6 +38,10 @@ class CompilationEngine:
         else:
             self.eat("field")
 
+        # advance
+        self.advance()
+        self.skip_advance = True
+
         # compile a type
         self.compileType()
         print("hello")
@@ -59,26 +63,49 @@ class CompilationEngine:
             self.advance()
             self.skip_advance = True
 
-        pass
-
     # compiles the inside of a subroutine declaration
+    def compileSubRoutineBody(self):
+        pass
 
     # compiles a complete method, function, or constructor.
     def compileSubroutineDec(self):
         # advance, then check for either constructor, function, or method
+        self.advance()
+        self.skip_advance = True
+
+        match self.tokenizer.current_token:
+            case "constructor":
+                self.eat("constructor")
+            case "function":
+                self.eat("function")
+            case "method":
+                self.eat("method")
 
         # advance, then check for void or type
+        self.advance()
+        self.skip_advance = True
 
+        if self.tokenizer.current_token == "void":
+            self.eat("void")
+        else:
+            self.compileType()
+
+        print(self.tokenizer.current_token)
         # compile an identifier
+        self.compileIdentifier()
 
         # eat (
+        self.eat("(")
 
         # compile parameterList (empty function for now)
+        self.compileParameterList()
 
         # eat )
+        self.eat(")")
 
         # compile subRoutineBody. for now, this can just be a compile statement
         # for statements in brackets.
+        self.compileSubRoutineBody()
 
         pass
 
@@ -102,10 +129,6 @@ class CompilationEngine:
 
     # compiles a sequence of statements. doesn't handle enclosing {}s. grammar:
     # statement*
-    # TODO implement compile_statement. That's already difficult enough. The
-    #      functions I will use here will not include expressions, as those are
-    #      extremely difficult. That means I won't be able to test my functions
-    #      for a while.
     def compileStatements(self):
         # advance
         self.advance()
@@ -133,9 +156,7 @@ class CompilationEngine:
 
     # compiles a type
     def compileType(self):
-        # advance
-        self.advance()
-        self.skip_advance = True
+
 
         # eat int, char, boolean, or an identifier
         match self.tokenizer.current_token:
@@ -500,7 +521,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileClassVarDec()
+        self.compileSubroutineDec()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
