@@ -44,11 +44,9 @@ class CompilationEngine:
 
         # compile a type
         self.compileType()
-        print("hello")
 
         # compile an identifier
         self.compileIdentifier()
-        print("hello")
 
         # advance
         self.advance()
@@ -56,12 +54,12 @@ class CompilationEngine:
 
         # while the next token is a comma, eat a comma and compile an identifier
         while self.tokenizer.current_token == ",":
-            print("hello")
             self.eat(",")
             self.compileIdentifier()
 
             self.advance()
             self.skip_advance = True
+        self.eat(";")
 
     # compiles the inside of a subroutine declaration
     def compileSubRoutineBody(self):
@@ -144,8 +142,34 @@ class CompilationEngine:
             <identifier> game </identifier>
             <symbol> ; </symbol>
         </varDec>
-        :return:
+            :return:
         """
+
+        # eat var
+        self.eat("var")
+
+        # advance
+        self.advance()
+        self.skip_advance = True
+
+        # compile a type
+        self.compileType()
+
+        # compile an identifier
+        self.compileIdentifier()
+
+        # advance
+        self.advance()
+        self.skip_advance = True
+
+        # while the next token is a comma, eat a comma and compile an identifier
+        while self.tokenizer.current_token == ",":
+            self.eat(",")
+            self.compileIdentifier()
+
+            self.advance()
+            self.skip_advance = True
+        self.eat(";")
 
         pass
 
@@ -547,7 +571,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileSubroutineDec()
+        self.compileVarDec()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):

@@ -1,1 +1,1 @@
-method int subRoutineName(int eat)
+static int zero, one, two, three;
