@@ -61,8 +61,25 @@ class CompilationEngine:
 
         pass
 
+    # compiles the inside of a subroutine declaration
+
     # compiles a complete method, function, or constructor.
     def compileSubroutineDec(self):
+        # advance, then check for either constructor, function, or method
+
+        # advance, then check for void or type
+
+        # compile an identifier
+
+        # eat (
+
+        # compile parameterList (empty function for now)
+
+        # eat )
+
+        # compile subRoutineBody. for now, this can just be a compile statement
+        # for statements in brackets.
+
         pass
 
     # compilers a parameter list. doesn't handle enclosing parentheses.
