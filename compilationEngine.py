@@ -63,6 +63,15 @@ class CompilationEngine:
 
     # compiles the inside of a subroutine declaration
     def compileSubRoutineBody(self):
+        # eat {
+
+        # advance
+
+        # while the current token is var, compile varDec
+
+        # compile statements
+
+        # eat }
         pass
 
     # compiles a complete method, function, or constructor.
