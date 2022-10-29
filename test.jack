@@ -1,1 +1,7 @@
-static int zero, one, two, three;
+class Class {
+    static int hello;
+
+    constructor int Hello(beep soup, beef boot) {
+
+    }
+}

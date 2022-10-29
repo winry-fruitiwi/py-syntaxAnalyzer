@@ -21,8 +21,19 @@ class CompilationEngine:
         # eat {
         self.eat("{")
 
+        self.advance()
+        self.skip_advance = True
+
         # compile statements. TODO change this to classVarDec and subRoutineDec
-        self.compileStatements()
+        while self.tokenizer.current_token in ["static", "field"]:
+            self.compileClassVarDec()
+            self.advance()
+            self.skip_advance = True
+
+        while self.tokenizer.current_token in ["constructor", "function", "method"]:
+            self.compileSubRoutineDec()
+            self.advance()
+            self.skip_advance = True
 
         # eat }
         self.eat("}")
@@ -30,7 +41,8 @@ class CompilationEngine:
     # compiles a static variable or a field declaration.
     def compileClassVarDec(self):
         # eat either static or field
-        self.advance()
+        if not self.skip_advance:
+            self.advance()
         self.skip_advance = True
 
         if self.tokenizer.current_token == "static":
@@ -64,20 +76,30 @@ class CompilationEngine:
     # compiles the inside of a subroutine declaration
     def compileSubRoutineBody(self):
         # eat {
+        self.eat("{")
 
         # advance
+        self.advance()
+        self.skip_advance = True
 
         # while the current token is var, compile varDec
+        while self.tokenizer.current_token == "var":
+            self.compileVarDec()
+            self.advance()
+            self.skip_advance = True
 
         # compile statements
+        self.compileStatements()
 
         # eat }
+        self.eat("}")
         pass
 
     # compiles a complete method, function, or constructor.
-    def compileSubroutineDec(self):
+    def compileSubRoutineDec(self):
         # advance, then check for either constructor, function, or method
-        self.advance()
+        if not self.skip_advance:
+            self.advance()
         self.skip_advance = True
 
         match self.tokenizer.current_token:
@@ -97,7 +119,6 @@ class CompilationEngine:
         else:
             self.compileType()
 
-        print(self.tokenizer.current_token)
         # compile an identifier
         self.compileIdentifier()
 
@@ -180,13 +201,12 @@ class CompilationEngine:
             self.skip_advance = True
         self.eat(";")
 
-        pass
-
     # compiles a sequence of statements. doesn't handle enclosing {}s. grammar:
     # statement*
     def compileStatements(self):
         # advance
-        self.advance()
+        if not self.skip_advance:
+            self.advance()
         self.skip_advance = True
 
         # while the current token is do, while, if, let, or return, call
@@ -580,7 +600,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileVarDec()
+        self.compileClass()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
