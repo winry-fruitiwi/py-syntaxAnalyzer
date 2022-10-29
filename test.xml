@@ -1,2 +1,9 @@
 <tokens>
+<identifier> nibble </identifier>
+<symbol> , </symbol>
+<identifier> on </identifier>
+<symbol> , </symbol>
+<keyword> this </keyword>
+<symbol> , </symbol>
+<identifier> soup </identifier>
 </tokens>

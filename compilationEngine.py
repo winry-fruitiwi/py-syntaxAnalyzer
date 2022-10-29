@@ -30,7 +30,8 @@ class CompilationEngine:
             self.advance()
             self.skip_advance = True
 
-        while self.tokenizer.current_token in ["constructor", "function", "method"]:
+        while self.tokenizer.current_token in ["constructor", "function",
+                                               "method"]:
             self.compileSubRoutineDec()
             self.advance()
             self.skip_advance = True
@@ -496,12 +497,23 @@ class CompilationEngine:
 
     # compiles a comma-separated list of expressions. can be empty.
     def compileExpressionList(self):
+        self.advance()
+        self.skip_advance = True
         # if simpleTerm's requirements are met:
+        if (self.tokenizer.current_token == "this" or
+                self.tokenizer.tokenType() == TokenType.IDENTIFIER):
+            # compile an expression
+            self.compileExpression()
 
-        # compile an expression
-
-        # while commas are detected, eat a comma and then compile an expression
-        pass
+            # while commas are detected, eat a comma and then compile an
+            # expression.
+            self.advance()
+            self.skip_advance = True
+            while self.tokenizer.current_token == ",":
+                self.eat(",")
+                self.compileExpression()
+                self.advance()
+                self.skip_advance = True
 
     # compiles an identifier
     def compileIdentifier(self):
