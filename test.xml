@@ -1,22 +1,2 @@
 <tokens>
-<keyword> class </keyword>
-<identifier> Class </identifier>
-<symbol> { </symbol>
-<keyword> static </keyword>
-<keyword> int </keyword>
-<identifier> hello </identifier>
-<symbol> ; </symbol>
-<keyword> constructor </keyword>
-<keyword> int </keyword>
-<identifier> Hello </identifier>
-<symbol> ( </symbol>
-<identifier> beep </identifier>
-<identifier> soup </identifier>
-<symbol> , </symbol>
-<identifier> beef </identifier>
-<identifier> boot </identifier>
-<symbol> ) </symbol>
-<symbol> { </symbol>
-<symbol> } </symbol>
-<symbol> } </symbol>
 </tokens>

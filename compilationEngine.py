@@ -496,7 +496,11 @@ class CompilationEngine:
 
     # compiles a comma-separated list of expressions. can be empty.
     def compileExpressionList(self):
+        # if simpleTerm's requirements are met:
 
+        # compile an expression
+
+        # while commas are detected, eat a comma and then compile an expression
         pass
 
     # compiles an identifier
@@ -600,7 +604,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileClass()
+        self.compileExpressionList()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):

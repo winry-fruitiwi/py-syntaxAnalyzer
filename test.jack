@@ -1,7 +1,1 @@
-class Class {
-    static int hello;
 
-    constructor int Hello(beep soup, beef boot) {
-
-    }
-}
