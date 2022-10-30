@@ -482,6 +482,22 @@ class CompilationEngine:
 
     # compiles a term.
     def compileTerm(self):
+        # if the current token is a unary operator, eat it and call term().
+
+        # if the current token is an integer constant, compile it and return.
+
+        # if the type is a keyword, compile a keyword.
+
+        # if the current token is (, eat (, compile expr, eat )
+
+        # if current token is an identifier, eat it
+
+        # if the next token is [, eat [, compile expr, eat ]
+
+        # if the next token is (, eat (, compile exprList, eat )
+
+        # if the next token is a period, eat period, identifier, (, exprList, )
+
         pass
 
     # compiles a massively simplified version of compile_term
@@ -616,20 +632,34 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileExpressionList()
+        self.compileSubRoutineCall()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
         # compile an identifier
         self.compileIdentifier()
 
-        # eat (
-        self.eat("(")
+        # if the next token is an open paren:
+        self.advance()
+        self.skip_advance = True
 
-        # compile an expression
-        self.compileExpression()
+        if self.tokenizer.current_token == "(":
+            # eat (
+            self.eat("(")
 
-        # eat )
-        self.eat(")")
+            # compile an expression
+            self.compileExpression()
+
+            # eat )
+            self.eat(")")
+
+        # otherwise, eat period, compile another identifier, eat (, eat an
+        # expression list, and then eat ).
+        elif self.tokenizer.current_token == ".":
+            self.eat(".")
+            self.compileIdentifier()
+            self.eat("(")
+            self.compileExpressionList()
+            self.eat(")")
 
         pass
