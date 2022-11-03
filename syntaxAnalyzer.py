@@ -12,9 +12,9 @@ from compilationEngine import *
 from TokenType import *
 
 # the root of all files I'll need to test here.
-file_root = ""
+file_root = "10/ExpressionLessSquare/"
 
-compilationEngine = CompilationEngine(file_root + "test.jack")
+compilationEngine = CompilationEngine(file_root + "Main.jack")
 
 
 def mainLoop(ce):
@@ -70,6 +70,4 @@ def mainLoop(ce):
     outputXML.write("</tokens>")
 
 
-compilationEngine.output.write("<tokens>\n")
-compilationEngine.testCompile()
-compilationEngine.output.write("</tokens>")
+compilationEngine.compileClass()

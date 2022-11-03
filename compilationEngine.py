@@ -12,6 +12,7 @@ class CompilationEngine:
     # compiles a complete class. This needs to be called immediately after
     # an instance is initialized.
     def compileClass(self):
+        self.output.write("<class>\n")
         # eat class
         self.eat("class")
 
@@ -39,8 +40,12 @@ class CompilationEngine:
         # eat }
         self.eat("}")
 
+        self.output.write("</class>\n")
+
     # compiles a static variable or a field declaration.
     def compileClassVarDec(self):
+        self.output.write("<classVarDec>\n")
+
         # eat either static or field
         if not self.skip_advance:
             self.advance()
@@ -74,8 +79,11 @@ class CompilationEngine:
             self.skip_advance = True
         self.eat(";")
 
+        self.output.write("</classVarDec>\n")
+
     # compiles the inside of a subroutine declaration
     def compileSubRoutineBody(self):
+        self.output.write("<subroutineBody>\n")
         # eat {
         self.eat("{")
 
@@ -94,10 +102,13 @@ class CompilationEngine:
 
         # eat }
         self.eat("}")
-        pass
+
+        self.output.write("</subroutineBody>\n")
 
     # compiles a complete method, function, or constructor.
     def compileSubRoutineDec(self):
+        self.output.write("<subroutineDec>\n")
+
         # advance, then check for either constructor, function, or method
         if not self.skip_advance:
             self.advance()
@@ -136,8 +147,12 @@ class CompilationEngine:
         # for statements in brackets.
         self.compileSubRoutineBody()
 
+        self.output.write("</subroutineDec>\n")
+
     # compilers a parameter list. doesn't handle enclosing parentheses.
     def compileParameterList(self):
+        self.output.write("<parameterList>\n")
+
         self.advance()
         self.skip_advance = True
         if (self.tokenizer.current_token in ["int", "char", "boolean"] or
@@ -164,8 +179,12 @@ class CompilationEngine:
                 self.advance()
                 self.skip_advance = True
 
+        self.output.write("</parameterList>\n")
+
     # compiles a variable declaration. grammar: var type varName(,varName)*;
     def compileVarDec(self):
+        self.output.write("<varDec>\n")
+
         """
         <varDec>
             <keyword> var </keyword>
@@ -202,9 +221,12 @@ class CompilationEngine:
             self.skip_advance = True
         self.eat(";")
 
+        self.output.write("</varDec>\n")
+
     # compiles a sequence of statements. doesn't handle enclosing {}s. grammar:
     # statement*
     def compileStatements(self):
+        self.output.write("<statements>\n")
         # advance
         if not self.skip_advance:
             self.advance()
@@ -220,8 +242,7 @@ class CompilationEngine:
             self.skip_advance = True
             print("\n\nstatement done!\n\n")
 
-        # at the end of each iteration, advance
-        pass
+        self.output.write("</statements>\n")
 
     # compiles a sequence of statements inside curly brackets
     def compileStatementsInBrackets(self):
@@ -482,23 +503,74 @@ class CompilationEngine:
 
     # compiles a term.
     def compileTerm(self):
+        # advance
+        if not self.skip_advance:
+            self.advance()
+        self.skip_advance = True
+
         # if the current token is a unary operator, eat it and call term().
+        if self.tokenizer.current_token == "-":
+            self.eat("-")
+            self.compileTerm()
+            return
+        elif self.tokenizer.current_token == "~":
+            self.eat("~")
+            self.compileTerm()
+            return
+            # if the current token is (, eat (, compile expr, eat )
+        elif self.tokenizer.current_token == "(":
+            self.eat("(")
+            self.compileExpression()
+            self.eat(")")
+            return
 
-        # if the current token is an integer constant, compile it and return.
+        match self.tokenizer.tokenType():
+            # if current token is a string constant, compile it
+            case TokenType.STRING_CONST:
+                self.compileStrConst()
+                return
 
-        # if the type is a keyword, compile a keyword.
+            # if the current token is an integer constant, compile it and return.
+            case TokenType.INT_CONST:
+                self.compileIntConst()
+                return
 
-        # if the current token is (, eat (, compile expr, eat )
+            # if the type is a keyword, compile a keyword.
+            case TokenType.KEYWORD:
+                self.compileKeyword()
+                return
 
-        # if current token is an identifier, eat it
+            # if current token is an identifier, eat it
+            case TokenType.IDENTIFIER:
+                self.compileIdentifier()
 
-        # if the next token is [, eat [, compile expr, eat ]
+                self.advance()
+                self.skip_advance = True
 
-        # if the next token is (, eat (, compile exprList, eat )
+                match self.tokenizer.current_token:
+                    # if the next token is (, eat (, compile exprList, eat )
+                    case "(":
+                        self.eat("(")
+                        self.compileExpressionList()
+                        self.eat(")")
 
-        # if the next token is a period, eat period, identifier, (, exprList, )
+                    # if the next token is [, eat [, compile expr, eat ]
+                    case "[":
+                        self.eat("[")
+                        self.compileExpression()
+                        self.eat("]")
 
-        pass
+                    # if the next token is a period, eat period, identifier, (, exprList, )
+                    case ".":
+                        self.eat(".")
+                        self.compileIdentifier()
+                        self.eat("(")
+                        self.compileExpressionList()
+                        print(self.tokenizer.current_token)
+                        self.skip_advance = False
+                        self.eat(")")
+
+        print("done")
 
     # compiles a massively simplified version of compile_term
     def compileSimpleTerm(self):
@@ -513,12 +585,18 @@ class CompilationEngine:
 
     # compiles a comma-separated list of expressions. can be empty.
     def compileExpressionList(self):
-        self.advance()
-        self.skip_advance = True
+        self.output.write("<expressionList>\n")
+        if not self.skip_advance:
+            self.advance()
+            self.skip_advance = True
+        else:
+            self.skip_advance = False
+
         # if simpleTerm's requirements are met:
         if (self.tokenizer.current_token == "this" or
                 self.tokenizer.tokenType() == TokenType.IDENTIFIER):
             # compile an expression
+            print(self.tokenizer.current_token)
             self.compileExpression()
 
             # while commas are detected, eat a comma and then compile an
@@ -530,6 +608,8 @@ class CompilationEngine:
                 self.compileExpression()
                 self.advance()
                 self.skip_advance = True
+
+        self.output.write("</expressionList>\n")
 
     # compiles an identifier
     def compileIdentifier(self):
@@ -560,7 +640,7 @@ class CompilationEngine:
         else:
             self.skip_advance = False
 
-        assert self.tokenizer.tokenType() == TokenType.STRING_CONST
+        assert self.tokenizer.tokenType() == TokenType.INT_CONST
 
         self.output.write(
             f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
@@ -586,9 +666,7 @@ class CompilationEngine:
         # if the token is the start of a line or a delimiter, advance again,
         # setting the token type again as well
         while token_type == "delimiter" or token_type == "Not a token.":
-            self.tokenizer.advance(
-
-            )
+            self.tokenizer.advance()
             token_type = self.tokenizer.tokenType()
 
     # asserts that the next token is its first argument. its second argument, a
@@ -632,7 +710,7 @@ class CompilationEngine:
 
     # a simple function that tests a single compile statement.
     def testCompile(self):
-        self.compileSubRoutineCall()
+        self.compileTerm()
 
     # an unneeded subroutine call method for use in terms and do statements.
     def compileSubRoutineCall(self):
