@@ -29,7 +29,11 @@
 <keyword> let </keyword>
 <identifier> game </identifier>
 <symbol> = </symbol>
+<expression>
+<term>
 <identifier> game </identifier>
+</term>
+</expression>
 <symbol> ; </symbol>
 </letStatement>
 <doStatement>
@@ -82,7 +86,11 @@
 <ifStatement>
 <keyword> if </keyword>
 <symbol> ( </symbol>
+<expression>
+<term>
 <identifier> b </identifier>
+</term>
+</expression>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <statements>

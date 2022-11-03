@@ -9,10 +9,13 @@ class CompilationEngine:
         # signals to eat() if we need to skip advance()
         self.skip_advance = False
 
+        # the number of indents before each line
+        self.indents = 0
+
     # compiles a complete class. This needs to be called immediately after
     # an instance is initialized.
     def compileClass(self):
-        self.output.write("<class>\n")
+        self.writeToOutput("<class>\n")
         # eat class
         self.eat("class")
 
@@ -40,11 +43,11 @@ class CompilationEngine:
         # eat }
         self.eat("}")
 
-        self.output.write("</class>\n")
+        self.writeToOutput("</class>\n")
 
     # compiles a static variable or a field declaration.
     def compileClassVarDec(self):
-        self.output.write("<classVarDec>\n")
+        self.writeToOutput("<classVarDec>\n")
 
         # eat either static or field
         if not self.skip_advance:
@@ -79,11 +82,11 @@ class CompilationEngine:
             self.skip_advance = True
         self.eat(";")
 
-        self.output.write("</classVarDec>\n")
+        self.writeToOutput("</classVarDec>\n")
 
     # compiles the inside of a subroutine declaration
     def compileSubRoutineBody(self):
-        self.output.write("<subroutineBody>\n")
+        self.writeToOutput("<subroutineBody>\n")
         # eat {
         self.eat("{")
 
@@ -103,11 +106,11 @@ class CompilationEngine:
         # eat }
         self.eat("}")
 
-        self.output.write("</subroutineBody>\n")
+        self.writeToOutput("</subroutineBody>\n")
 
     # compiles a complete method, function, or constructor.
     def compileSubRoutineDec(self):
-        self.output.write("<subroutineDec>\n")
+        self.writeToOutput("<subroutineDec>\n")
 
         # advance, then check for either constructor, function, or method
         if not self.skip_advance:
@@ -147,11 +150,11 @@ class CompilationEngine:
         # for statements in brackets.
         self.compileSubRoutineBody()
 
-        self.output.write("</subroutineDec>\n")
+        self.writeToOutput("</subroutineDec>\n")
 
     # compilers a parameter list. doesn't handle enclosing parentheses.
     def compileParameterList(self):
-        self.output.write("<parameterList>\n")
+        self.writeToOutput("<parameterList>\n")
 
         self.advance()
         self.skip_advance = True
@@ -179,11 +182,11 @@ class CompilationEngine:
                 self.advance()
                 self.skip_advance = True
 
-        self.output.write("</parameterList>\n")
+        self.writeToOutput("</parameterList>\n")
 
     # compiles a variable declaration. grammar: var type varName(,varName)*;
     def compileVarDec(self):
-        self.output.write("<varDec>\n")
+        self.writeToOutput("<varDec>\n")
 
         """
         <varDec>
@@ -221,12 +224,12 @@ class CompilationEngine:
             self.skip_advance = True
         self.eat(";")
 
-        self.output.write("</varDec>\n")
+        self.writeToOutput("</varDec>\n")
 
     # compiles a sequence of statements. doesn't handle enclosing {}s. grammar:
     # statement*
     def compileStatements(self):
-        self.output.write("<statements>\n")
+        self.writeToOutput("<statements>\n")
         # advance
         if not self.skip_advance:
             self.advance()
@@ -242,7 +245,7 @@ class CompilationEngine:
             self.skip_advance = True
             print("\n\nstatement done!\n\n")
 
-        self.output.write("</statements>\n")
+        self.writeToOutput("</statements>\n")
 
     # compiles a sequence of statements inside curly brackets
     def compileStatementsInBrackets(self):
@@ -307,7 +310,7 @@ class CompilationEngine:
         :return:
         """
         # add opening tag
-        self.output.write("<letStatement>\n")
+        self.writeToOutput("<letStatement>\n")
 
         # eat let
         self.eat("let")
@@ -333,7 +336,7 @@ class CompilationEngine:
         # eat ;
         self.eat(";")
 
-        self.output.write("</letStatement>\n")
+        self.writeToOutput("</letStatement>\n")
 
     # compiles an if statement. grammar: if (expression){statement} (else
     # {statements})?
@@ -363,7 +366,7 @@ class CompilationEngine:
         """
 
         # write opening tag, eat if
-        self.output.write("<ifStatement>\n")
+        self.writeToOutput("<ifStatement>\n")
         self.eat("if")
 
         # eat expression in parens
@@ -381,7 +384,7 @@ class CompilationEngine:
             self.compileStatementsInBrackets()
 
         # write ending tag to output
-        self.output.write("</ifStatement>\n")
+        self.writeToOutput("</ifStatement>\n")
 
     # compiles a while statement. grammar: while (expression) {statements}
     def compileWhileStatement(self):
@@ -424,7 +427,7 @@ class CompilationEngine:
         :return:
         """
         # while + write to output
-        self.output.write("<whileStatement>\n")
+        self.writeToOutput("<whileStatement>\n")
         self.eat("while")
 
         # compile (expression)
@@ -434,7 +437,7 @@ class CompilationEngine:
         self.compileStatementsInBrackets()
 
         # write closing tag
-        self.output.write("</whileStatement>\n")
+        self.writeToOutput("</whileStatement>\n")
 
         pass
 
@@ -455,7 +458,7 @@ class CompilationEngine:
         """
 
         # eat do
-        self.output.write("<doStatement>\n")
+        self.writeToOutput("<doStatement>\n")
         self.eat("do")
 
         # compile subRoutineCall
@@ -465,14 +468,14 @@ class CompilationEngine:
         self.eat(";")
 
         # ending tag
-        self.output.write("</doStatement>\n")
+        self.writeToOutput("</doStatement>\n")
 
         pass
 
     # compiles a return statement. grammar: return expression?;
     def compileReturnStatement(self):
         # eat return
-        self.output.write("<returnStatement>\n")
+        self.writeToOutput("<returnStatement>\n")
         self.eat("return")
 
         # advance, set skip_advance to true
@@ -488,12 +491,14 @@ class CompilationEngine:
         self.eat(";")
 
         # write output tag
-        self.output.write("</returnStatement>\n")
+        self.writeToOutput("</returnStatement>\n")
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
     # for now call compile_simple_term here
     def compileExpression(self):
+        self.writeToOutput("<expression>\n")
         self.compileSimpleTerm()
+        self.writeToOutput("</expression>\n")
 
     # compiles an expression within parentheses.
     def compileExprInParens(self):
@@ -503,6 +508,8 @@ class CompilationEngine:
 
     # compiles a term.
     def compileTerm(self):
+        self.writeToOutput("<term>\n")
+
         # advance
         if not self.skip_advance:
             self.advance()
@@ -572,8 +579,12 @@ class CompilationEngine:
 
         print("done")
 
+        self.writeToOutput("</term>\n")
+
     # compiles a massively simplified version of compile_term
     def compileSimpleTerm(self):
+        self.writeToOutput("<term>\n")
+
         if not self.skip_advance:
             self.advance()
             self.skip_advance = True
@@ -583,9 +594,11 @@ class CompilationEngine:
         else:
             self.compileIdentifier()
 
+        self.writeToOutput("</term>\n")
+
     # compiles a comma-separated list of expressions. can be empty.
     def compileExpressionList(self):
-        self.output.write("<expressionList>\n")
+        self.writeToOutput("<expressionList>\n")
         if not self.skip_advance:
             self.advance()
             self.skip_advance = True
@@ -609,7 +622,7 @@ class CompilationEngine:
                 self.advance()
                 self.skip_advance = True
 
-        self.output.write("</expressionList>\n")
+        self.writeToOutput("</expressionList>\n")
 
     # compiles an identifier
     def compileIdentifier(self):
@@ -620,7 +633,7 @@ class CompilationEngine:
 
         assert self.tokenizer.tokenType() == TokenType.IDENTIFIER
 
-        self.output.write(
+        self.writeToOutput(
             f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
     def compileStrConst(self):
@@ -631,7 +644,7 @@ class CompilationEngine:
 
         assert self.tokenizer.tokenType() == TokenType.STRING_CONST
 
-        self.output.write(
+        self.writeToOutput(
             f"<stringConstant> {self.tokenizer.stringVal()} </stringConstant>\n")
 
     def compileIntConst(self):
@@ -642,7 +655,7 @@ class CompilationEngine:
 
         assert self.tokenizer.tokenType() == TokenType.INT_CONST
 
-        self.output.write(
+        self.writeToOutput(
             f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
 
     def compileKeyword(self):
@@ -653,7 +666,7 @@ class CompilationEngine:
 
         assert self.tokenizer.tokenType() == TokenType.KEYWORD
 
-        self.output.write(f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
+        self.writeToOutput(f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
 
     # advances the tokenizer and checks if it's a delimiter or not a token.
     def advance(self):
@@ -686,23 +699,23 @@ class CompilationEngine:
         # add a tag describing it appropriately.
         match token_type:
             case TokenType.STRING_CONST:
-                self.output.write(
+                self.writeToOutput(
                     f"<stringConstant> {self.tokenizer.stringVal()} </stringConstant>\n")
 
             case TokenType.INT_CONST:
-                self.output.write(
+                self.writeToOutput(
                     f"<integerConstant> {self.tokenizer.intVal()} </integerConstant>\n")
 
             case TokenType.SYMBOL:
-                self.output.write(
+                self.writeToOutput(
                     f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
 
             case TokenType.KEYWORD:
-                self.output.write(
+                self.writeToOutput(
                     f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
 
             case TokenType.IDENTIFIER:
-                self.output.write(
+                self.writeToOutput(
                     f"<identifier> {self.tokenizer.identifier()} </identifier>\n")
 
         current_token = self.tokenizer.current_token
@@ -740,4 +753,16 @@ class CompilationEngine:
             self.compileExpressionList()
             self.eat(")")
 
+        pass
+
+    # increases self.indent
+    def indent(self):
+        pass
+
+    # decreases self.indent
+    def dedent(self):
+        pass
+
+    # write to the output, taking into account
+    def writeToOutput(self, string):
         pass
