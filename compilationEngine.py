@@ -16,6 +16,8 @@ class CompilationEngine:
     # an instance is initialized.
     def compileClass(self):
         self.writeToOutput("<class>\n")
+        self.indent()
+
         # eat class
         self.eat("class")
 
@@ -43,11 +45,13 @@ class CompilationEngine:
         # eat }
         self.eat("}")
 
+        self.dedent()
         self.writeToOutput("</class>\n")
 
     # compiles a static variable or a field declaration.
     def compileClassVarDec(self):
         self.writeToOutput("<classVarDec>\n")
+        self.indent()
 
         # eat either static or field
         if not self.skip_advance:
@@ -82,11 +86,14 @@ class CompilationEngine:
             self.skip_advance = True
         self.eat(";")
 
+        self.dedent()
         self.writeToOutput("</classVarDec>\n")
 
     # compiles the inside of a subroutine declaration
     def compileSubRoutineBody(self):
         self.writeToOutput("<subroutineBody>\n")
+        self.indent()
+
         # eat {
         self.eat("{")
 
@@ -106,11 +113,13 @@ class CompilationEngine:
         # eat }
         self.eat("}")
 
+        self.dedent()
         self.writeToOutput("</subroutineBody>\n")
 
     # compiles a complete method, function, or constructor.
     def compileSubRoutineDec(self):
         self.writeToOutput("<subroutineDec>\n")
+        self.indent()
 
         # advance, then check for either constructor, function, or method
         if not self.skip_advance:
@@ -150,11 +159,13 @@ class CompilationEngine:
         # for statements in brackets.
         self.compileSubRoutineBody()
 
+        self.dedent()
         self.writeToOutput("</subroutineDec>\n")
 
     # compilers a parameter list. doesn't handle enclosing parentheses.
     def compileParameterList(self):
         self.writeToOutput("<parameterList>\n")
+        self.indent()
 
         self.advance()
         self.skip_advance = True
@@ -182,11 +193,13 @@ class CompilationEngine:
                 self.advance()
                 self.skip_advance = True
 
+        self.dedent()
         self.writeToOutput("</parameterList>\n")
 
     # compiles a variable declaration. grammar: var type varName(,varName)*;
     def compileVarDec(self):
         self.writeToOutput("<varDec>\n")
+        self.indent()
 
         """
         <varDec>
@@ -224,12 +237,15 @@ class CompilationEngine:
             self.skip_advance = True
         self.eat(";")
 
+        self.dedent()
         self.writeToOutput("</varDec>\n")
 
     # compiles a sequence of statements. doesn't handle enclosing {}s. grammar:
     # statement*
     def compileStatements(self):
         self.writeToOutput("<statements>\n")
+        self.indent()
+
         # advance
         if not self.skip_advance:
             self.advance()
@@ -245,6 +261,7 @@ class CompilationEngine:
             self.skip_advance = True
             print("\n\nstatement done!\n\n")
 
+        self.dedent()
         self.writeToOutput("</statements>\n")
 
     # compiles a sequence of statements inside curly brackets
@@ -311,6 +328,7 @@ class CompilationEngine:
         """
         # add opening tag
         self.writeToOutput("<letStatement>\n")
+        self.indent()
 
         # eat let
         self.eat("let")
@@ -336,6 +354,7 @@ class CompilationEngine:
         # eat ;
         self.eat(";")
 
+        self.dedent()
         self.writeToOutput("</letStatement>\n")
 
     # compiles an if statement. grammar: if (expression){statement} (else
@@ -367,6 +386,8 @@ class CompilationEngine:
 
         # write opening tag, eat if
         self.writeToOutput("<ifStatement>\n")
+        self.indent()
+
         self.eat("if")
 
         # eat expression in parens
@@ -384,6 +405,7 @@ class CompilationEngine:
             self.compileStatementsInBrackets()
 
         # write ending tag to output
+        self.dedent()
         self.writeToOutput("</ifStatement>\n")
 
     # compiles a while statement. grammar: while (expression) {statements}
@@ -428,6 +450,8 @@ class CompilationEngine:
         """
         # while + write to output
         self.writeToOutput("<whileStatement>\n")
+        self.indent()
+
         self.eat("while")
 
         # compile (expression)
@@ -437,9 +461,8 @@ class CompilationEngine:
         self.compileStatementsInBrackets()
 
         # write closing tag
+        self.dedent()
         self.writeToOutput("</whileStatement>\n")
-
-        pass
 
     # compiles a do statement. grammar: do subRoutineCall;
     def compileDoStatement(self):
@@ -459,6 +482,8 @@ class CompilationEngine:
 
         # eat do
         self.writeToOutput("<doStatement>\n")
+        self.indent()
+
         self.eat("do")
 
         # compile subRoutineCall
@@ -468,6 +493,7 @@ class CompilationEngine:
         self.eat(";")
 
         # ending tag
+        self.dedent()
         self.writeToOutput("</doStatement>\n")
 
         pass
@@ -476,6 +502,8 @@ class CompilationEngine:
     def compileReturnStatement(self):
         # eat return
         self.writeToOutput("<returnStatement>\n")
+        self.indent()
+
         self.eat("return")
 
         # advance, set skip_advance to true
@@ -491,13 +519,18 @@ class CompilationEngine:
         self.eat(";")
 
         # write output tag
+        self.dedent()
         self.writeToOutput("</returnStatement>\n")
 
     # compiles an expression. Important: do this last! grammar: term (op term)*
     # for now call compile_simple_term here
     def compileExpression(self):
         self.writeToOutput("<expression>\n")
+        self.indent()
+
         self.compileSimpleTerm()
+
+        self.dedent()
         self.writeToOutput("</expression>\n")
 
     # compiles an expression within parentheses.
@@ -509,6 +542,7 @@ class CompilationEngine:
     # compiles a term.
     def compileTerm(self):
         self.writeToOutput("<term>\n")
+        self.indent()
 
         # advance
         if not self.skip_advance:
@@ -579,11 +613,13 @@ class CompilationEngine:
 
         print("done")
 
+        self.dedent()
         self.writeToOutput("</term>\n")
 
     # compiles a massively simplified version of compile_term
     def compileSimpleTerm(self):
         self.writeToOutput("<term>\n")
+        self.indent()
 
         if not self.skip_advance:
             self.advance()
@@ -594,11 +630,14 @@ class CompilationEngine:
         else:
             self.compileIdentifier()
 
+        self.dedent()
         self.writeToOutput("</term>\n")
 
     # compiles a comma-separated list of expressions. can be empty.
     def compileExpressionList(self):
         self.writeToOutput("<expressionList>\n")
+        self.indent()
+
         if not self.skip_advance:
             self.advance()
             self.skip_advance = True
@@ -622,6 +661,7 @@ class CompilationEngine:
                 self.advance()
                 self.skip_advance = True
 
+        self.dedent()
         self.writeToOutput("</expressionList>\n")
 
     # compiles an identifier
@@ -739,7 +779,7 @@ class CompilationEngine:
             self.eat("(")
 
             # compile an expression
-            self.compileExpression()
+            self.compileExpressionList()
 
             # eat )
             self.eat(")")
@@ -757,12 +797,12 @@ class CompilationEngine:
 
     # increases self.indent
     def indent(self):
-        pass
+        self.indents += 1
 
     # decreases self.indent
     def dedent(self):
-        pass
+        self.indents -= 1
 
     # write to the output, taking into account
     def writeToOutput(self, string):
-        pass
+        self.output.write("  " * self.indents + string)
