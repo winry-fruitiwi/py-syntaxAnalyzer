@@ -257,7 +257,8 @@ class CompilationEngine:
                                                "return"]:
             self.compileStatement()
 
-            self.advance()
+            if not self.skip_advance:
+                self.advance()
             self.skip_advance = True
             print("\n\nstatement done!\n\n")
 
@@ -394,7 +395,9 @@ class CompilationEngine:
         self.compileExprInParens()
 
         # eat statement in brackets
-        self.compileStatementsInBrackets()
+        self.eat("{")
+        self.compileStatements()
+        self.eat("}")
 
         # advance the tokenizer, then check if the current token is else. if
         # it is, then eat else and {statements}.
@@ -407,6 +410,7 @@ class CompilationEngine:
         # write ending tag to output
         self.dedent()
         self.writeToOutput("</ifStatement>\n")
+        print("after an if statement: ", self.tokenizer.current_token)
 
     # compiles a while statement. grammar: while (expression) {statements}
     def compileWhileStatement(self):

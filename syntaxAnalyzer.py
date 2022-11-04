@@ -14,7 +14,7 @@ from TokenType import *
 # the root of all files I'll need to test here.
 file_root = "10/ExpressionLessSquare/"
 
-compilationEngine = CompilationEngine(file_root + "Square.jack")
+compilationEngine = CompilationEngine(file_root + "SquareGame.jack")
 
 
 def mainLoop(ce):
