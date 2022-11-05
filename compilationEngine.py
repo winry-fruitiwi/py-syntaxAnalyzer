@@ -532,7 +532,7 @@ class CompilationEngine:
         self.writeToOutput("<expression>\n")
         self.indent()
 
-        self.compileSimpleTerm()
+        self.compileTerm()
 
         self.dedent()
         self.writeToOutput("</expression>\n")
@@ -553,37 +553,21 @@ class CompilationEngine:
             self.advance()
         self.skip_advance = True
 
-        # if the current token is a unary operator, eat it and call term().
-        if self.tokenizer.current_token == "-":
-            self.eat("-")
-            self.compileTerm()
-            return
-        elif self.tokenizer.current_token == "~":
-            self.eat("~")
-            self.compileTerm()
-            return
-            # if the current token is (, eat (, compile expr, eat )
-        elif self.tokenizer.current_token == "(":
-            self.eat("(")
-            self.compileExpression()
-            self.eat(")")
-            return
-
         match self.tokenizer.tokenType():
             # if current token is a string constant, compile it
             case TokenType.STRING_CONST:
                 self.compileStrConst()
-                return
+
 
             # if the current token is an integer constant, compile it and return.
             case TokenType.INT_CONST:
                 self.compileIntConst()
-                return
+
 
             # if the type is a keyword, compile a keyword.
             case TokenType.KEYWORD:
                 self.compileKeyword()
-                return
+
 
             # if current token is an identifier, eat it
             case TokenType.IDENTIFIER:
@@ -614,6 +598,21 @@ class CompilationEngine:
                         print(self.tokenizer.current_token)
                         self.skip_advance = False
                         self.eat(")")
+
+        # if the current token is a unary operator, eat it and call term().
+        if self.tokenizer.current_token == "-":
+            self.eat("-")
+            self.compileTerm()
+
+        elif self.tokenizer.current_token == "~":
+            self.eat("~")
+            self.compileTerm()
+
+            # if the current token is (, eat (, compile expr, eat )
+        elif self.tokenizer.current_token == "(":
+            self.eat("(")
+            self.compileExpression()
+            self.eat(")")
 
         print("done")
 
@@ -649,8 +648,7 @@ class CompilationEngine:
             self.skip_advance = False
 
         # if simpleTerm's requirements are met:
-        if (self.tokenizer.current_token == "this" or
-                self.tokenizer.tokenType() == TokenType.IDENTIFIER):
+        if self.tokenizer.current_token != ")":
             # compile an expression
             print(self.tokenizer.current_token)
             self.compileExpression()
