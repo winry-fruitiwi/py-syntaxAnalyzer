@@ -14,7 +14,7 @@ from TokenType import *
 # the root of all files I'll need to test here.
 file_root = "10/Square/"
 
-compilationEngine = CompilationEngine(file_root + "Main.jack")
+compilationEngine = CompilationEngine("test.jack")
 
 
 def mainLoop(ce):
@@ -70,5 +70,5 @@ def mainLoop(ce):
     outputXML.write("</tokens>")
 
 
-compilationEngine.compileClass()
-# compilationEngine.testCompile()
+# compilationEngine.compileClass()
+compilationEngine.testCompile()

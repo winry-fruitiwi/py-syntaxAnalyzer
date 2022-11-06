@@ -535,11 +535,20 @@ class CompilationEngine:
         self.compileTerm()
 
         # advance
-
-
+        if not self.skip_advance:
+            self.advance()
+        self.skip_advance = True
+        print(self.tokenizer.current_token)
 
         # if the current token is in the list [+, -, *, /, &, |, <, >, =], eat
         # a symbol and a term
+        while self.tokenizer.current_token in ['+', '-', '*', '/', '&', '|', '<', '>', '=']:
+            print("hello!")
+            self.compileSymbol()
+            self.compileTerm()
+            if not self.skip_advance:
+                self.advance()
+            self.skip_advance = True
 
         self.dedent()
         self.writeToOutput("</expression>\n")
@@ -716,6 +725,16 @@ class CompilationEngine:
         assert self.tokenizer.tokenType() == TokenType.KEYWORD
 
         self.writeToOutput(f"<keyword> {self.tokenizer.keyword()} </keyword>\n")
+
+    def compileSymbol(self):
+        if not self.skip_advance:
+            self.advance()
+        else:
+            self.skip_advance = False
+
+        assert self.tokenizer.tokenType() == TokenType.SYMBOL
+
+        self.writeToOutput(f"<symbol> {self.tokenizer.symbol()} </symbol>\n")
 
     # advances the tokenizer and checks if it's a delimiter or not a token.
     def advance(self):
