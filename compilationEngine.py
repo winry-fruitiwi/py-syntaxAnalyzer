@@ -534,6 +534,13 @@ class CompilationEngine:
 
         self.compileTerm()
 
+        # advance
+
+
+
+        # if the current token is in the list [+, -, *, /, &, |, <, >, =], eat
+        # a symbol and a term
+
         self.dedent()
         self.writeToOutput("</expression>\n")
 
