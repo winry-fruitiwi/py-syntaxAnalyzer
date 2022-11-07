@@ -234,7 +234,7 @@ class JackTokenizer:
             next_quote_index = curr_line.index('"', self.current_char_index + 1)
             self.current_token = curr_line[self.current_char_index:next_quote_index + 1]
 
-            self.current_char_index = next_quote_index
+            self.current_char_index = next_quote_index + 1
             print(self.current_char_index)
         else:
             # for each character in the current line, starting from the current
